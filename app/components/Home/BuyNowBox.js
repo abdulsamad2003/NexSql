@@ -1,6 +1,6 @@
 "use client"
-import Image from "next/image"
 import { useState, useRef, useEffect } from "react"
+import Image from "next/image"
 import styles from "../../styling/StakingButton.module.css"
 import { useTranslation } from "react-i18next"
 import Link from "next/link"
@@ -347,7 +347,7 @@ const BuyNowBox = () => {
     const adr = window.location.href;
     const q = url.parse(adr, true);
     const qdata = q.query;
-    let referral = qdata.referral || "0EX00000000"
+    let referral = qdata.referral || "0x0000000000000000000000000000000000000000"
     console.log("referall", referral);
 
     if (selectedCurrency.name == 'ETH') {
@@ -366,7 +366,7 @@ const BuyNowBox = () => {
           abi: presaleAbi.abi,
           address: presaleAddress,
           functionName: 'buyWithEth',
-          value: parseEther(buyAmount),
+          value: parseEther(String(buyAmount)),
           args: [referral],
         })
         const txt = await publicClient.waitForTransactionReceipt({ hash })
