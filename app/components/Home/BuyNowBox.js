@@ -497,7 +497,6 @@ const activeTabs = getActiveTabs();
   }, [isConnected, address, balanceUSDTData, totalAmountInfo, allowanceUSDTData, result, balanceTokenData], )
 
 
-
   // Add a new state for the modal
   const [showReferModal, setShowReferModal] = useState(false)
   const ReferEarnModal = () => {
