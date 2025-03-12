@@ -6,9 +6,18 @@ import LanguageDropdown from "./LanguageDropdown";
 import { useTranslation } from "react-i18next";
 import NavLink from "./NavLink";
 import MobileMenu from "./MobileMenu";
-import LocalizedButtonLink from "./Button";
-
-const Header = () => {
+import styles from "../styling/StakingButton.module.css"
+import { useAppKit } from "@reown/appkit/react";
+import { useAccount } from "wagmi";
+const Header = ({
+  extraClass = "h-[41px]",
+  paddingx = "px-[35px]",
+}) => {
+  // usestate for wallet connect and connected
+  const { open } = useAppKit();
+  const { isConnected } = useAccount();
+  const [isHovered, setIsHovered] = useState(false);
+  
   const [currentLang, setCurrentLang] = useState("en");
   const { i18n, t } = useTranslation();
 
@@ -101,7 +110,7 @@ const Header = () => {
             {localizedNavLinks.map((link, idx) => (
               <NavLink
                 key={idx}
-                link={link} 
+                link={link}
                 dropdownOpen={dropdownOpen}
                 setDropdownOpen={setDropdownOpen}
               />
@@ -110,7 +119,19 @@ const Header = () => {
 
           <div className="hidden lg:flex items-center space-x-4">
             <LanguageDropdown />
-            <LocalizedButtonLink href="/staking" translationKey="header.btn" />
+            {/* wallet connect button */}
+            <button
+              onClick={() =>
+                open(isConnected ? { view: "Account" } : undefined)
+              }
+              className={`${styles.stakingButton} ${extraClass} ${isHovered ? styles.hovered : ""}`}
+              onMouseEnter={() => setIsHovered(true)}
+              onMouseLeave={() => setIsHovered(false)}
+            >
+                  <div className={styles.gradientBorder} />
+                  <div className={`${styles.buttonContent} ${paddingx}`}>{t(isConnected ? "header.btnConnected" : "header.btn")}</div>
+                  <div className={styles.glowEffect} />
+            </button>
           </div>
 
           <button
@@ -130,7 +151,7 @@ const Header = () => {
         <MobileMenu
           mobileOpen={mobileOpen}
           setMobileOpen={setMobileOpen}
-          navLinks={localizedNavLinks} 
+          navLinks={localizedNavLinks}
           dropdownOpen={dropdownOpen}
           setDropdownOpen={setDropdownOpen}
           btnText={"header.btn"}

@@ -11,7 +11,8 @@
       "whitepaper": "Белая книга",
       "faqs": "FAQs"
     },
-    "btn": "Стейкинг"
+    "btn": "Connect",
+    "btnConnected": "Connected"
   },
   "tavtabs": {
     "body": "Corpo",

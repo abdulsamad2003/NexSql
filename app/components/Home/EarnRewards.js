@@ -78,7 +78,7 @@ export default function EarnRewards() {
               {card.hasButton && (
                 <Button
                   href="/staking"
-                  translationKey={card.buttonText}
+                  translationKey="home.earnRewards.cards.0.buttonText"
                   paddingx="px-[28.5px]"
                   extraClass="h-[47px] text-nowrap md:-mt-0 -mt-20 min-w-[122px]"
                 />

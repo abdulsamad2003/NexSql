@@ -11,7 +11,8 @@
       "whitepaper": "Documento Técnico",
       "faqs": "Preguntas Frecuentes"
     },
-    "btn": "Staking"
+    "btn": "Connect",
+    "btnConnected": "Connected"
   },
   "tavtabs": {
     "body": "Cuerpo",

@@ -10,8 +10,9 @@
       "tokenomics": "Tokenomics",
       "whitepaper": "Livre Blanc",
       "faqs": "Questions Fréquemment Posées"
-    },
-    "btn": "Staking"
+    },   
+    "btn": "Connect",
+    "btnConnected": "Connected"
   },
   "tavtabs": {
     "body": "Corps",

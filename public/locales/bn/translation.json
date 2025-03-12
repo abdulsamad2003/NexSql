@@ -1,106 +1,347 @@
 {
   "header": {
     "nav": {
-      "home": "হোম",
-      "features": "ফিচার",
+      "home": "Home",
+      "features": "Features",
       "unifiedAI": "Unified AI",
       "depin": "DePIN",
       "rwa": "RWA",
-      "roadmap": "রোডম্যাপ",
-      "tokenomics": "টোকেনোমিক্স",
-      "whitepaper": "সাদা পত্র",
-      "faqs": "প্রশ্নাবলী"
+      "roadmap": "RoadMap",
+      "tokenomics": "Tokenomics",
+      "whitepaper": "Whitepaper",
+      "faqs": "FAQs"
     },
-    "btn": "স্টেকিং"
+    "btn": "Connect",
+    "btnConnected": "Connected"
   },
   "tavtabs": {
-    "body": "বডি",
-    "sports": "ক্রীড়া",
-    "coaches": "কোচ",
-    "podcasts": "পডকাস্ট",
-    "tutorials": "টিউটোরিয়াল",
-    "store": "দোকান"
+    "body": "Body",
+    "sports": "Sports",
+    "coaches": "Coaches",
+    "podcasts": "Podcasts",
+    "tutorials": "Tutorials",
+    "store": "Store"
   },
   "btns": {
-    "learn-more": "আরও জানুন"
+    "learn-more": "Learn More"
   },
   "home": {
     "hero": {
-      "new": "নতুন",
-      "integrationLive": "পরবর্তী প্রজন্মের ইন্টিগ্রেশন লাইভ!",
-      "poweringFuture": "ভবিষ্যতকে শক্তি দেওয়া: AI, DePIN এবং RWA একক ইউনিফায়েড গ্রিডে",
-      "description": "AI-চালিত কম্পিউটিং শক্তি, টোকেনাইজড সম্পদ এবং একটি একক ইকোসিস্টেমে বিকেন্দ্রীকৃত অবকাঠামো।",
-      "staking": "স্টেকিং",
-      "whitepaper": "সাদা পত্র"
+      "new": "NEW",
+      "integrationLive": "Next-Gen Integration is Live!",
+      "poweringFuture": "Powering the Future: AI, DePIN & RWA in One Unified Grid",
+      "description": "AI-driven compute power, tokenized assets, and decentralized infrastructure in one ecosystem.",
+      "staking": "Staking",
+      "whitepaper": "Whitepaper"
+    },
+    "buyNowBox": {
+      "title": "Buy",
+      "now": "Now",
+      "untilPriceIncrease": "Until price increase",
+      "currentPrice": "Current price",
+      "nextPrice": "Next price",
+      "raised": "Raised",
+      "stackableVRN": "Stackable VRN",
+      "purchasedVRN": "Purchased VRN",
+      "listingPrice": "Listing price",
+      "chooseAmount": "Choose amount",
+      "vrnYouReceive": "$VRN you receive",
+      "availableBonus": "Available Bonus",
+      "spendMore": "Spend",
+      "toGetBonus": "more to get 10% bonus tokens",
+      "buyNow": "Buy Now"
+    },
+    "featuredIn": {
+      "title": "Featured In"
+    },
+    "ourFeatures": {
+      "title": "Our Features",
+      "description": "VORN AI is a self-sustaining, AI-driven ecosystem that integrates AI, DePIN, and RWA tokenization to create a fully autonomous decentralized economy.",
+      "aiTitle": "AI - The Intelligent Brain",
+      "aiDescription": "AI in VORN.AI serves as the intelligent core, optimizing resource allocation, automating smart contracts, and enhancing network security through real-time monitoring. It predicts demand for computing and energy resources, ensuring efficient distribution and maximum utilization. AI also manages yield optimization for staking pools and supports decentralized governance by streamlining proposal analysis and voting processes.",
+      "depinTitle": "DePIN – The Physical Backbone",
+      "depinDescription": "DePIN provides the physical infrastructure, including computing nodes, storage devices, and energy grids, enabling users to contribute and monetize their resources. AI dynamically allocates these resources based on network needs, creating a decentralized marketplace for compute power, cloud storage, and renewable energy trading, while rewarding contributors with VRN tokens.",
+      "rwaTitle": "RWA – The Economic Engine",
+      "rwaDescription": "RWA tokenization bridges real-world assets with blockchain, allowing infrastructure such as real estate, data centers, and energy grids to be converted into fractional NFTs. Users can trade, stake, and borrow against these tokenized assets, earning passive income through AI-managed yield distribution while benefiting from global liquidity and decentralized ownership.",
+      "learn-more": "Learn More"
+    },
+    "buyNRTX": {
+      "title": "How to Buy VRN Tokens",
+      "description": "Buy VRN Tokens in three simple steps",
+      "steps": {
+        "step1": {
+          "step": "Step 01",
+          "title": "Create your Wallet",
+          "description": "If you already have a compatible wallet, proceed to Step 2. We recommend MetaMask for desktop and Trust Wallet for mobile. Download & set up your wallet to get started."
+        },
+        "step2": {
+          "step": "Step 02",
+          "title": "Top Up Your Wallet",
+          "description": "Fund your wallet with ETH, USDT or USDC to purchase VRN. If paying by Credit/debit card, you can skip this step."
+        },
+        "step3": {
+          "step": "Step 03",
+          "title": "Buy VRN Tokens",
+          "description": "Click 'Buy Now' and approve the transaction in your wallet. Once successful, your VRN tokens will be automatically sent to your wallet."
+        }
+      }
+    },
+    "earnRewards": {
+      "title": {
+        "start": "Earn Rewards",
+        "end": "Passive Income Effortlessly"
+      },
+      "description": "Monitor your rewards in real-time and claim earnings when available.",
+      "cards": [
+        {
+          "title": "Buy VRN Tokens",
+          "description": "Connect your wallet and purchase VRN to get started.",
+          "buttonText": "Buy Now"
+        },
+        {
+          "title": "Stake VRN",
+          "description": "Go to the 'Staking' section on the platform. Choose a staking duration that fits your strategy. Longer staking = higher rewards & governance power."
+        },
+        {
+          "title": "Earn Rewards",
+          "description": "Monitor your rewards in real-time and claim earnings when available. Rewards are distributed based on network contributions. Reinvest or withdraw as per platform rules."
+        }
+      ]
+    },
+    "rewardsCalculator": {
+      "title": {
+        "start": "Staking",
+        "end": "Rewards Calendar"
+      },
+      "description": "Calculate your potential rewards based on the staking duration.",
+      "cards": [
+        {
+          "title": "3 Months",
+          "apr": "APR: 300%"
+        },
+        {
+          "title": "6 Months",
+          "apr": "APR: 700%"
+        },
+        {
+          "title": "9 Months",
+          "apr": "APR: 1200%"
+        },
+        {
+          "title": "12 Months",
+          "apr": "APR: 1900%"
+        }
+      ],
+      "buttonText": "Stake Now"
+    },
+    "roadMap": {
+      "subTitle": "VORN AI Roadmap",
+      "title": "Pioneering the Future of Decentralized AI",
+      "description": "Our roadmap outlines the journey towards a scalable, secure, and fully autonomous AI ecosystem.",
+      "phases": [
+        {
+          "quarter": "Q1 2025",
+          "title": "Research & Development"
+        },
+        {
+          "quarter": "Q2 2025",
+          "title": "Prototype / Testnet Launch"
+        },
+        {
+          "quarter": "Q3 2025",
+          "title": "Mainnet Launch"
+        },
+        {
+          "quarter": "Q4 2025",
+          "title": "Scaling & Global Adoption"
+        }
+      ],
+      "items": {
+        "marketResearch": "Market Research",
+        "whitepaperRelease": "Whitepaper Release",
+        "tokenomicsDesign": "Tokenomics Design",
+        "technicalArchitecture": "Technical Architecture",
+        "communityBuilding": "Community Building",
+        "earlyPartnerships": "Early Partnerships",
+        "aiComputeGridTestnet": "AI Compute Grid Testnet",
+        "rwaTokenizationBeta": "RWA Tokenization Beta",
+        "depinNodeDeployment": "DePIN Node Deployment",
+        "aiDaoPrototype": "AI-DAO Prototype",
+        "smartContractAudits": "Smart Contract Audits",
+        "testnetIncentiveProgram": "Testnet Incentive Program",
+        "mainnetDeployment": "Mainnet Deployment",
+        "rwaMarketplace": "RWA Marketplace",
+        "aiManagedStakingPools": "AI-Managed Staking Pools",
+        "energyTradingPlatform": "Energy Trading Platform",
+        "cexDexListings": "CEX/DEX Listings",
+        "ecosystemIncentives": "Ecosystem Incentives",
+        "aiModelMarketplace": "AI Model Marketplace",
+        "crossChainCompatibility": "Cross-Chain Compatibility",
+        "layer2Scaling": "Layer 2 Scaling",
+        "enterpriseIntegrations": "Enterprise Integrations",
+        "rwaExpansion": "RWA Expansion",
+        "globalOutreach": "Global Outreach"
+      }
+    },
+    "tokenomics": {
+      "subTitle": "Tokenomics",
+      "title": {
+        "start": "Tokenomics:",
+        "end": "The Economy of VORN AI"
+      },
+      "description": "The VORN AI ($VRN) ecosystem is designed for long-term sustainability, balancing utility, rewards, and governance. Below is the token distribution model ensuring growth, security, and decentralization.",
+      "liquidityAndExchangeListings": "Liquidity & Exchange Listings",
+      "infrastructureAndDevelopment": "Infrastructure & Development",
+      "teamAndAdvisors": "Team & Advisors",
+      "ecosystemAndRewards": "Ecosystem & Rewards",
+      "publicAndPrivateSales": "Public & Private Sales"
+    },
+    "builtOn": {
+      "title": "Built On",
+      "poweredBy": "Powered by",
+      "innovation": "Innovation, Built for the Future."
+    },
+    "faqs": {
+      "title": "FAQs",
+      "subtitle": "Frequently Asked Questions",
+      "question1": "What is VORN.AI?",
+      "answer1": "VORN.AI is an AI-powered decentralized platform for infrastructure and real-world asset (RWA) tokenization.",
+      "question2": "How does VORN.AI utilize AI?",
+      "answer2": "VORN.AI leverages artificial intelligence for automated asset valuation, risk assessment, and market analysis. The platform uses advanced AI algorithms to optimize tokenization processes and enhance decision-making in real-world asset management.",
+      "question3": "What can I do with VRN tokens?",
+      "answer3": "VRN tokens serve multiple purposes within the VORN ecosystem. You can stake them for rewards, participate in governance decisions, access premium features, and trade them on supported exchanges.",
+      "question4": "What is DePIN in VORN.AI?",
+      "answer4": "DePIN (Decentralized Physical Infrastructure Network) in VORN.AI is a framework that connects real-world infrastructure to blockchain technology, enabling decentralized management and tokenization of physical assets.",
+      "question5": "What are tokenized RWAs in VORN.AI?",
+      "answer5": "Tokenized RWAs (Real World Assets) in VORN.AI are digital representations of physical assets on the blockchain. This includes real estate, infrastructure, commodities, and other tangible assets that have been converted into tradable digital tokens."
+    }
+  },
+  "aiUtility": {
+    "title": "Unified AI – The Brain of VORN.AI",
+    "description": "AI in VORN.AI acts as the intelligent automation layer, optimizing infrastructure, transactions, and  security across the decentralized network. It ensures seamless operation, fraud prevention, yield  management, and real-time decision-making.",
+    "intelligentAutomation": {
+      "title": "Intelligent Automation for Efficient, Secure & Decentralized Operations",
+      "description": "VORN.AI enhances computing efficiency, automates smart contracts, predicts market trends, strengthens security against fraud, and optimizes governance to ensure seamless and trustless decentralized operations."
+    },
+    "services": {
+      "title": "AI Utility Services",
+      "subtitle": "for Seamless and Profitable Automation"
+    },
+    "timeline": {
+      "first": {
+        "title": "AI-Powered Compute Grid:",
+        "description": "This service manages decentralized GPU/CPU resources, dynamically allocating AI and machine learning workloads to the most suitable nodes, ensuring cost-effective compute solutions for developers and rewards for resource providers."
+      },
+      "second": {
+        "title": "AI Yield Management System:",
+        "description": "The AI yield management system adjusts staking rewards in real-time based on network performance, asset utilization, and liquidity needs, offering users optimized passive income opportunities through AI-managed staking pools."
+      },
+      "third": {
+        "title": "AI-Optimized Energy Marketplace:",
+        "description": "The AI-optimized energy marketplace balances supply and demand for selected renewable energy by predicting cycles and consumption, dynamically pricing trading profits, and facilitating peer-to-peer energy trading."
+      }
+    }
+  },
+  "staking": {
+    "totalVRNBalance": "Total $VRN Balance",
+    "stakingReward": "Staking Reward",
+    "referralEarnings": "Your Referral Earnings",
+    "stakingSection": {
+      "title": "Staking",
+      "totalStaking": "Total Staking",
+      "stakingPeriod": "Staking period",
+      "apr": "APR {{apr}}",
+      "placeholder": "10,000.00 VRN",
+      "max": "MAX",
+      "stakeNow": "STAKE NOW",
+      "stakeAmount": "Stake amount",
+      "estimatedProfit": "Estimated Profit",
+      "total": "Total",
+      "lcaiToBeLocked": "LCAI to be locked",
+      "duration": "Duration",
+      "unlockOn": "Unlock On"
+    },
+    "referral": {
+      "title": "Referral",
+      "totalReferrals": "Total Referrals",
+      "totalEarnedAmount": "Total Earned Amount",
+      "yourReferralLink": "Your Referral Link:",
+      "copied": "Copied!"
+    },
+    "leaderboard": {
+      "title": "Leaderboard",
+      "sr": "SR",
+      "user": "User",
+      "amount": "$VRN Amount"
     }
   },
   "depin": {
-    "title": "DePIN – VORN.AI এর ভিত্তি",
-    "description": "VORN.AI তে DePIN শারীরিক সম্পদ প্রদান করে, যেমন কম্পিউটিং নোড, স্টোরেজ ডিভাইস এবং শক্তি গ্রিড, ব্যবহারকারীদের তাদের অবকাঠামোকে মুনাফা করতে সক্ষম করে।",
+    "title": "DePIN – The Backbone of VORN.AI",
+    "description": "DePIN in VORN.AI provides the physical resources for the ecosystem, such as computing nodes, storage devices, and energy grids, enabling users to monetize their infrastructure while powering decentralized operations.",
     "poweringVORN": {
-      "title1": "ডিসেন্ট্রালাইজড AI কম্পিউট নোড",
-      "description1": "AI কাজের জন্য আপনার কম্পিউটিং শক্তি শেয়ার করুন, AI কাজের বোঝা অপ্টিমাইজ করে। আপনার অবদান অনুযায়ী VRN টোকেন উপার্জন করুন।",
-      "title2": "ডিসেন্ট্রালাইজড ক্লাউড স্টোরেজ",
-      "description2": "নিরাপদ, বিকেন্দ্রীকৃত স্টোরেজ প্রদান করুন যেখানে AI এনক্রিপশন এবং পুনরুদ্ধার পরিচালনা করে। VRN টোকেনের মাধ্যমে পুরস্কৃত হন।",
-      "title3": "ডিসেন্ট্রালাইজড শক্তি গ্রিড",
-      "description3": "AI গ্রিড লোড ভারসাম্য রেখে নবায়নযোগ্য শক্তি টোকেনাইজ এবং বাণিজ্য করুন। শক্তি সম্পদ অবদান রাখার জন্য VRN টোকেন উপার্জন করুন।",
-      "title4": "IoT এবং স্মার্ট শহরের সংহতি",
-      "description4": "AI ট্রাফিক এবং পরিবেশ পর্যবেক্ষণের মতো স্মার্ট অ্যাপ্লিকেশনের জন্য বাস্তব সময় IoT ডেটা প্রক্রিয়া করে। ডিভাইস অপারেটররা VRN টোকেন উপার্জন করেন।"
+      "title1": "Decentralized AI Compute Nodes",
+      "description1": "Share your computing power for AI tasks, with AI optimizing workloads. Earn VRN tokens based on your contribution.",
+      "title2": "Decentralized Cloud Storage:",
+      "description2": "Provide secure, decentralized storage with AI handling encryption and retrieval. Get rewarded in VRN tokens.",
+      "title3": "Decentralized Energy Grid",
+      "description3": "Tokenize and trade renewable energy while AI balances grid loads. Earn VRN tokens for contributing energy resources.",
+      "title4": "IoT & Smart Cities Integration:",
+      "description4": "AI processes real-time IoT data for smart applications like traffic and environment monitoring. Device operators earn VRN tokens."
     }
   },
   "rwa": {
-    "title": "RWA – VORN.AI এর অর্থনৈতিক ইঞ্জিন",
-    "description": "VORN.AI তে RWA টোকেনাইজেশন শারীরিক বিশ্বের সাথে ব্লকচেইন প্রযুক্তি সংযোগ করে, ব্যবহারকারীদের বাস্তব বিশ্বের সম্পদগুলি টোকেনাইজ, বাণিজ্য এবং উপার্জন করতে সক্ষম করে।",
+    "title": "RWA – The Economic Engine of VORN.AI",
+    "description": "RWA tokenization in VORN.AI bridges the physical world with blockchain technology, allowing users to tokenize, trade, and earn from real-world assets.",
     "rwaContent": {
-      "title": "সবার জন্য বাস্তব বিশ্বের সম্পদ উন্মুক্ত করা।",
-      "description": "RWA Core অবকাঠামোকে ব্লকচেইন সম্পদে টোকেনাইজ করে সম্পদ মালিকানা বিপ্লব ঘটায়, ছোট আকারের বিনিয়োগকারীদের জন্য ভগ্নাংশ মালিকানা সক্ষম করে। স্বয়ংক্রিয় আয় বিতরণ প্যাসিভ আয় প্রদান করে এবং একটি P2P মার্কেটপ্লেসের মাধ্যমে নির্বিঘ্ন বৈশ্বিক বাণিজ্য নিশ্চিত করে, RWA Core উচ্চ-মূল্যের সম্পদকে সবার জন্য অ্যাক্সেসযোগ্য করে তোলে।",
+      "title": "Unlocking Real-World Assets for Everyone.",
+      "description": "RWA Core revolutionizes asset ownership by tokenizing infrastructure into blockchain assets, enabling fractional ownership for small-scale investors. With automated yield distribution providing passive income and a P2P marketplace for seamless global trading, RWA Core makes high-value assets accessible to all.",
       "heading": {
-        "start": "বাস্তব বিশ্বের সম্পদ সংযুক্ত করা",
-        "end": "ব্লকচেইন-চালিত ইউটিলিটির সাথে।"
+        "start": "Bridging Real-World Assets",
+        "end": "with Blockchain-Powered Utility."
       },
       "features": {
-        "title1": "RWA টোকেনাইজেশন প্ল্যাটফর্ম",
-        "description1": "এই প্ল্যাটফর্মটি বাস্তব বিশ্বের অবকাঠামোকে NFT-সমর্থিত টোকেনে রূপান্তরিত করতে সহায়তা করে, সম্পদ মালিকদের তাদের সম্পদগুলি বৈশ্বিক বিনিয়োগ এবং আয় উৎপাদনের জন্য টোকেনাইজ এবং ভগ্নাংশ করতে সক্ষম করে।",
-        "title2": "RWA মার্কেটপ্লেস",
-        "description2": "RWA মার্কেটপ্লেস হল টোকেনাইজড সম্পদ কেনা, বিক্রি এবং বাণিজ্যের জন্য একটি বিকেন্দ্রীকৃত এক্সচেঞ্জ, যেখানে AI সঠিক মূল্যায়ন, প্রতারণা প্রতিরোধ এবং তাত্ক্ষণিক তরলতা নিশ্চিত করে।",
-        "title3": "RWA স্টেকিং পুল",
-        "description3": "RWA স্টেকিং পুল ব্যবহারকারীদের টোকেনাইজড সম্পদগুলি স্টেক করতে এবং বাস্তব বিশ্বের সম্পদগুলি থেকে উৎপন্ন আয় উপার্জন করতে দেয়, AI কর্মক্ষমতা এবং বাজারের অবস্থার উপর ভিত্তি করে আয় বিতরণ পরিচালনা করে।",
-        "title4": "RWA কলাটেরালাইজেশন এবং ঋণদান",
-        "description4": "RWA কলাটেরালাইজেশন এবং ঋণদান পরিষেবাগুলি ব্যবহারকারীদের তাদের টোকেনাইজড সম্পদগুলি ঋণের জন্য কলাটেরাল হিসাবে লক করতে সক্ষম করে, AI ঝুঁকি মূল্যায়ন, সুদের হার পরিচালনা এবং নিরাপদ লেনদেন নিশ্চিত করে।"
+        "title1": "RWA Tokenization Platform",
+        "description1": "This platform facilitates the conversion of real-world infrastructure into NFT-backed tokens, allowing asset owners to tokenize and fractionalize their assets for global investment and income generation.",
+        "title2": "RWA Marketplace",
+        "description2": "The RWA marketplace is a decentralized exchange for buying, selling, and trading tokenized assets like real estate and energy credits, with AI ensuring accurate valuations, fraud prevention, and instant liquidity.",
+        "title3": "RWA Staking Pools",
+        "description3": "RWA staking pools allow users to stake tokenized assets and earn yields generated from the underlying real-world assets, with AI managing yield distribution based on performance and market conditions.",
+        "title4": "RWA Collateralization & Lending",
+        "description4": "RWA collateralization and lending services provide liquidity by enabling users to lock their tokenized assets as collateral for loans, with AI assessing risk, managing interest rates, and ensuring secure transactions."
       },
-      "buttonText": "এখন স্টেক করুন"
+      "buttonText": "Stake Now"
     }
   },
   "footer": {
-    "description": "VORN.AI – বিকেন্দ্রীকৃত বুদ্ধিমত্তার ভবিষ্যতকে শক্তি দেওয়া। AI-চালিত। অবকাঠামো-শক্তি। সম্পদ-টোকেনাইজড।",
+    "description": "VORN.AI – Powering the Future of Decentralized Intelligence AI-Driven. Infrastructure-Powered. Asset-Tokenized.",
     "product": {
-      "title": "পণ্য",
-      "features": "ফিচার",
-      "unifiedAI": "একীভূত AI",
+      "title": "Product",
+      "features": "Features",
+      "unifiedAI": "Unified AI",
       "depin": "DePIN",
       "rwa": "RWA"
     },
     "company": {
-      "title": "কোম্পানি",
-      "home": "হোম",
-      "roadmap": "রোডম্যাপ",
-      "tokenomics": "টোকেনোমিক্স",
-      "faqs": "প্রশ্নাবলী"
+      "title": "Company",
+      "home": "Home",
+      "roadmap": "Roadmap",
+      "tokenomics": "Tokenomics",
+      "faqs": "FAQs"
     },
     "resources": {
-      "title": "সম্পদ",
-      "staking": "স্টেকিং",
-      "whitepaper": "সাদা পত্র",
-      "cookiePolicy": "কুকি নীতি"
+      "title": "Resources",
+      "staking": "Staking",
+      "whitepaper": "Whitepaper",
+      "cookiePolicy": "Cookie Policy"
     },
     "newsletter": {
-      "title": "আমাদের নিউজলেটারে যোগ দিন",
-      "subtitle": "সবকিছু সম্পর্কে আপডেট থাকুন।",
-      "placeholder": "আপনার ইমেইল লিখুন",
-      "subscribe": "সাবস্ক্রাইব করুন"
+      "title": "Join our newsletter",
+      "subtitle": "Keep up to date with everything Refinance.",
+      "placeholder": "Enter your email",
+      "subscribe": "Subscribe"
     },
-    "privacyPolicy": "গোপনীয়তা নীতি",
-    "termsConditions": "শর্তাবলী",
-    "rights": "© 2025, VORN AI। সকল অধিকার সংরক্ষিত।"
+    "privacyPolicy": "Privacy Policy",
+    "termsConditions": "Terms and Conditions",
+    "rights": "© 2025, VORN AI. All rights reserved"
   }
 }

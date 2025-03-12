@@ -11,8 +11,9 @@
       "whitepaper": "श्वेत पत्र",
       "faqs": "अक्सर पूछे जाने वाले प्रश्न"
     },
-    "btn": "स्टेकिंग"
-  },
+    "btn": "Connect",
+    "btnConnected": "Connected"
+    },
   "tavtabs": {
     "body": "शरीर",
     "sports": "खेल",

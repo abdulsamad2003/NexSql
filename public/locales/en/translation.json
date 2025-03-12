@@ -11,7 +11,8 @@
       "whitepaper": "Whitepaper",
       "faqs": "FAQs"
     },
-    "btn": "Staking"
+    "btn": "Connect",
+    "btnConnected": "Connected"
   },
   "tavtabs": {
     "body": "Body",
@@ -342,5 +343,7 @@
     "privacyPolicy": "Privacy Policy",
     "termsConditions": "Terms and Conditions",
     "rights": "© 2025, VORN AI. All rights reserved"
-  }
+  },
+  "btnText": "staking"
+  
 }

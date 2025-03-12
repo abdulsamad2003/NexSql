@@ -11,6 +11,9 @@ import Leaderboard from "../../components/Staking/Leaderboard";
 import { useTranslation } from "react-i18next";
 
 const Staking = () => {
+
+  // staking address
+  // 0x2bf950f5789c4859fcf89c9a84bbfc30c3e244c9
   useLanguage();
   const { t } = useTranslation();
 

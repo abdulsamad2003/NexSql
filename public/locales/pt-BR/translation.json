@@ -11,7 +11,8 @@
       "whitepaper": "Whitepaper",
       "faqs": "FAQs"
     },
-    "btn": "Participação"
+    "btn": "Connect",
+    "btnConnected": "Connected"
   },
   "tavtabs": {
     "body": "Corpo",

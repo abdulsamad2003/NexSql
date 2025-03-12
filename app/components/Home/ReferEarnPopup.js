@@ -1,7 +1,48 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Copy, DollarSign, Sun } from 'lucide-react'
+import Web3 from 'web3'
+import { useAccount, useReadContract } from 'wagmi'
+import presaleAbi from "../../components/contractABI/presaleAbi.json"
 
+// load bloackchain
+const Provider = new Web3.providers.HttpProvider("https://bsc-dataseed.binance.org/")
+const web3 = new Web3(Provider)
 const ReferEarnPopup = () => {
+    const presaleAddress = "0x462eed0076dc1b2fe9deea0857df6d1953fe7d46"
+    const {address, isConnected} = useAccount()
+    const [referralLink, setReferralLink] = useState("https://vorn.ai?referral")
+    const [referralStats] = useState(
+        {
+            referrals: 0,
+            bonus: "0.00"
+        }
+    );
+    // use abi
+    const { data: getReferralsInfo } = useReadContract({
+        abi: presaleAbi.abi,
+        address: presaleAddress,
+        functionName: 'getReferrals',
+        args:[address],
+      })
+    
+      const { data: getTotalReferralEarnInfo } = useReadContract({
+        abi: presaleAbi.abi,
+        address: presaleAddress,
+        functionName: 'getTotalReferralEarnings',
+        args:[address],
+      })
+
+      // use useEffect
+      useEffect(()=>{
+        if(typeof window !== 'undefined' && isConnected){
+            const protocol = window.location.protocol;
+            const hostname = window.location.hostname;
+            let url = protocol+hostname;
+            if(hostname==='localhost') url = protocol+hostname+':3000'
+            setReferralLink(url+'?referral='+address)
+        }
+      }, [isConnected, address, getTotalReferralEarnInfo, getReferralsInfo, referralStats])
+    
     return (
         <div className="relative z-10 bg-[#1A0A2E] border border-[#8616DF] rounded-lg p-5 w-[90%] max-w-md">
             <div className="flex justify-between items-center mb-4">
@@ -12,11 +53,11 @@ const ReferEarnPopup = () => {
                 <p className="text-white/90 text-sm">Share your referral link and earn 5% of your friends&lsquo; purchases!</p>
 
                 <div className="bg-[#250142] rounded-md p-3 flex items-center justify-between">
-                    <span className="text-white/90 text-sm truncate">https://vorn.ai/ref/your-unique-code</span>
+                    <span className="text-white/90 text-sm truncate">{referralLink}</span>
                     <button
                         className="ml-2 text-[#C176FF] hover:text-[#A052FF] transition-colors"
                         onClick={() => {
-                            navigator.clipboard.writeText("https://vorn.ai/ref/your-unique-code")
+                            navigator.clipboard.writeText(referralLink)
                             alert("Referral link copied to clipboard!")
                         }}
                     >

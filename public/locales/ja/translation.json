@@ -11,7 +11,8 @@
       "whitepaper": "ホワイトペーパー",
       "faqs": "よくある質問"
     },
-    "btn": "ステーキング"
+    "btn": "Connect",
+    "btnConnected": "Connected"
   },
   "tavtabs": {
     "body": "ボディ",

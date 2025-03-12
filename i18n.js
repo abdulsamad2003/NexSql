@@ -69,7 +69,7 @@ i18n
     ns: ["translation"],
     defaultNS: "translation",
     debug: process.env.NODE_ENV !== "production",
-
+    debug: true,
     interpolation: {
       escapeValue: false, // React handles escaping
     },
