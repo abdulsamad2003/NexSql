@@ -17,6 +17,7 @@ import toast from "react-hot-toast"
 
 import presaleAbi from "../../components/contractABI/presaleAbi.json"
 import tokenAbi from "../../components/contractABI/tokenAbi.json"
+import { parseEther } from "viem"
 
 
 // setup blockchain here 
