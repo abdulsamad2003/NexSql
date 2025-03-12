@@ -30,7 +30,8 @@
     "swiper": "^11.1.14",
     "typescript": "^5.5.4",
     "viem": "^2.23.8",
-    "wagmi": "^2.14.12"
+    "wagmi": "^2.14.12",
+    "web3": "^4.16.0"
   },
   "devDependencies": {
     "@types/node": "22.0.0",
