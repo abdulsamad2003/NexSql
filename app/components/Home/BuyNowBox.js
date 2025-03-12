@@ -472,7 +472,6 @@ const activeTabs = getActiveTabs();
     
     // use use-effect for isConnected and more things for prevent it from running multiple times(infinite loop)
   useEffect(() => {
-    handleBuyToken()
     fetchBalance()
     if(isConnected)
     {
@@ -690,11 +689,12 @@ const activeTabs = getActiveTabs();
         </div>
         {/* Connect and  Buy Now */}
         {
-          !isConnected ? (
+          isConnected ? (
             <button
             className={`${styles.stakingButtonBuyNow} ${isHovered ? styles.hovered : ""}`}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
+            onClick={handleBuyToken}
           >
             <div className={styles.gradientBorder} />
             <h3 className={styles.buttonContentBuyNow}> {t("home.buyNowBox.buyNow")}</h3>
@@ -705,9 +705,10 @@ const activeTabs = getActiveTabs();
             className={`${styles.stakingButtonBuyNow} ${isHovered ? styles.hovered : ""}`}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
+            onClick={() => open(isConnected ? { view: "Account" } : undefined)}
           >
             <div className={styles.gradientBorder} />
-            <h3 className={styles.buttonContentBuyNow}>Buy Now</h3>
+            <h3 className={styles.buttonContentBuyNow}>Connect</h3>
             <div className={styles.glowEffectBuyNow} />
           </button>
           )

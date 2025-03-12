@@ -1,21 +1,29 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { FaTimes } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import NavLink from "./NavLink";
-import Button from "./Button";
 import LanguageDropdown from "./LanguageDropdown";
-
+import { useAppKit } from "@reown/appkit/react";
+import { useAccount } from "wagmi";
+import styles from "../styling/StakingButton.module.css"
+import { useTranslation } from "react-i18next";
 const MobileMenu = ({
   mobileOpen,
   setMobileOpen,
   navLinks,
   dropdownOpen,
   setDropdownOpen,
-  btnText,
+  extraClass = "h-[41px]",
+  paddingx = "px-[35px]"
 }) => {
   const router = useRouter();
+  const { open } = useAppKit();
+  const { isConnected } = useAccount();
+  const [isHovered, setIsHovered] = useState(false);
+  const { t } = useTranslation();
 
+  
   return (
     <div className="lg:hidden min-w-full fixed min-h-screen top-0 z-50 left-0 w-full bg-black p-6">
       <button
@@ -37,7 +45,18 @@ const MobileMenu = ({
 
       <div className="mt-4 space-y-4">
         <LanguageDropdown />
-        <Button href="/staking" translationKey={btnText} />
+        <button
+              onClick={() =>
+                open(isConnected ? { view: "Account" } : undefined)
+              }
+              className={`${styles.stakingButton} ${extraClass} ${isHovered ? styles.hovered : ""}`}
+              onMouseEnter={() => setIsHovered(true)}
+              onMouseLeave={() => setIsHovered(false)}
+            >
+                  <div className={styles.gradientBorder} />
+                  <div className={`${styles.buttonContent} ${paddingx}`}>{t(isConnected ? "header.btnConnected" : "header.btn")}</div>
+                  <div className={styles.glowEffect} />
+            </button>
       </div>
     </div>
   );
