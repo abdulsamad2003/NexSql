@@ -14,11 +14,9 @@ import { ethers } from "ethers"
 import url from 'url';
 import { getClient } from "../../config/blockchain"
 import toast from "react-hot-toast"
-
+import { parseEther } from "viem"
 import presaleAbi from "../../components/contractABI/presaleAbi.json"
 import tokenAbi from "../../components/contractABI/tokenAbi.json"
-import { parseEther } from "viem"
-
 
 // setup blockchain here 
 const Provider = new Web3.providers.HttpProvider("https://rpc.ankr.com/eth");
@@ -66,7 +64,6 @@ const BuyNowBox = () => {
   // use usestate for buy amount and buy now button stars
   const [buyAmount, setBuyAmount] = useState(0)
   const [expectedTokens, setExpectedTokens] = useState(0);
-  const [buyButtonState, setBuyButtonState] = useState(false)
   const [buyButtonText, setBuyButtonText] = useState('Buy Now')
   //set bonus text
   const [bonusBelowText, setBonusBelowText] = useState("Buy minimum of $500 and 5% extra Tokens")
@@ -104,8 +101,8 @@ const BuyNowBox = () => {
   }, [activeTab])
 
 
-  const [ethPriceLive, setEthPriceLive] = useState(0);
   // fetch live eth price
+  const [ethPriceLive, setEthPriceLive] = useState(0);
   useEffect(() => {
     async function fetchEthPrice() {
       const providerETH = new ethers.JsonRpcProvider("https://rpc.ankr.com/eth");
@@ -115,6 +112,7 @@ const BuyNowBox = () => {
     }
     fetchEthPrice();
   }, []);
+
   // used for Percent box
   const getActiveTabs = () => {
     let amountInUSD = buyAmount; // Default for USDT
@@ -122,7 +120,6 @@ const BuyNowBox = () => {
       // Convert ETH to USD based on price
       amountInUSD = buyAmount * (Number(ethPriceLive) / 1e18) + 0.001;
     }
-
     if (amountInUSD < 500) return [{ bonusBelowText }];
     if (amountInUSD >= 500 && amountInUSD < 1000) return ["500"];
     if (amountInUSD >= 1000 && amountInUSD < 1500) return ["500", "1000"];
@@ -132,11 +129,9 @@ const BuyNowBox = () => {
   const activeTabs = getActiveTabs();
   useEffect(() => {
     let amountInUSD = buyAmount;
-
     if (selectedCurrency.name === "ETH") {
       amountInUSD = buyAmount * (Number(ethPriceLive) / 1e18) + 0.001;
     }
-
     if (amountInUSD < 500) {
       setBonusBelowText("Buy minimum of $500 and get 5% extra tokens"); // Reset message for low amounts
     } else if (amountInUSD >= 500 && amountInUSD < 1000) {
@@ -198,8 +193,6 @@ const BuyNowBox = () => {
     const providerETH = new ethers.JsonRpcProvider('https://rpc.ankr.com/eth');
     // Create a contract instance with the provider
     const contractETH = new ethers.Contract(presaleAddress, presaleAbi.abi, providerETH);
-    // Call the read function (replace with your function's name) 
-
     try {
       let tokenPrice = await contractETH.presale(1);
       tokenPrice = web3.utils.fromWei(tokenPrice[2].toString(), 'ether');
@@ -220,6 +213,7 @@ const BuyNowBox = () => {
 
       // call token contract when user is connected
       const contractToken = new ethers.Contract(tokenAddress, tokenAbi.abi, providerETH);
+      // Check user balance of how  many token is remaining from total claimed tokens
       try {
         let balance = await contractToken.balanceOf(address);
         balance = web3.utils.fromWei(balance, "ether");
@@ -230,7 +224,7 @@ const BuyNowBox = () => {
     }
   }
 
-  // use useref for but amount input field 
+  // use useref for buy amount input field 
   const inputRef = useRef(null)
 
   const updateBuyAmount = async () => {
@@ -254,7 +248,7 @@ const BuyNowBox = () => {
         currencyRateUSD = priceBigInt.toString(); // Convert BigInt to string
       }
       let eth = ethers.parseUnits(amount.toString(), 'ether');
-      //  Why divide by 1e12? USDT (Tether) has 6 decimal places (while ETH has 18 decimal places)
+      //  Why converting mwei?? USDT (Tether) has 6 decimal places (while ETH has 18 decimal places)
       if (selectedCurrency.name === "USDT" || selectedCurrency.name === "USDC") {
         eth = Number(web3.utils.toWei(amount.toString(), 'mwei'));
       }
@@ -267,13 +261,13 @@ const BuyNowBox = () => {
       setBuyAmount(selectedCurrency.name === "ETH"
         ? Number(web3.utils.fromWei(eth.toString(), 'ether')) // Convert ETH properly
         : Number(eth) / 1e6  // USDT (adjusted for 6 decimals)
-      ); let tokens = Number(resultETH) / 1e18;
+      ); 
+      let tokens = Number(resultETH) / 1e18;
 
       // add bonus when user manually add more than 250 usdt
-      if (amount >= 250 && amount <= 499) tokens *= 1.05;
-      else if (amount >= 500 && amount <= 999) tokens *= 1.07;
-      else if (amount >= 1000 && amount <= 2499) tokens *= 1.10;
-      else if (amount >= 2500) tokens *= 1.15;
+      if (amount >= 500 && amount <= 999) tokens *= 1.05;
+      else if (amount >= 1000 && amount <= 1499) tokens *= 1.10;
+      else if (amount >= 1500) tokens *= 1.15;
       console.log(tokens)
       setExpectedTokens(tokens);
     } catch (error) {
@@ -321,15 +315,10 @@ const BuyNowBox = () => {
         ? await contractETH.ethToTokens(1, eth.toString())
         : await contractETH.usdtToTokens(1, eth.toString());
       let tokens = Number(resultETH) / 1e18; // Convert to normal number
-      if (amount === 250) {
-        tokens *= 1.05; // Increase by 5%
-      } else if (amount === 500) {
-        tokens *= 1.07; // Increase by 7%
-      } else if (amount === 1000) {
-        tokens *= 1.10; // Increase by 10%
-      } else if (amount === 2500) {
-        tokens *= 1.15; // Increase by 15%
-      }
+         // add bonus when user manually add more than 250 usdt
+         if (amount >= 500 && amount <= 999) tokens *= 1.05;
+         else if (amount >= 1000 && amount <= 1499) tokens *= 1.10;
+         else if (amount >= 1500) tokens *= 1.15;
       setExpectedTokens(tokens);
     } catch (error) {
       console.error('Error:', error);
@@ -338,7 +327,6 @@ const BuyNowBox = () => {
   // buy button functionality
   async function handleBuyToken() {
     if (parseFloat(buyAmount) <= 0) {
-      setBuyButtonState(false);
       setBuyButtonText('Buy Now');
       notifyErrorMsg('Please enter amount');
       return;
@@ -354,7 +342,6 @@ const BuyNowBox = () => {
 
       // if buy amount more then avail balance of user 
       if (parseFloat(buyAmount) > parseFloat(web3.utils.fromWei(ethBalance.toString(), 'ether'))) {
-        setBuyButtonState(false)
         setBuyButtonText('Buy Now')
         notifyErrorMsg('Insufficient ETH Balance')
         return;
@@ -373,7 +360,6 @@ const BuyNowBox = () => {
 
         // show success msg if txn is success
         if (txn.success == "success") {
-          setBuyButtonState(false);
           setBuyButtonText('Buy Now');
           notifySuccess(`${expectedTokens} CYNQ Bought Successfully`);
         }
@@ -385,7 +371,6 @@ const BuyNowBox = () => {
         } else {
           notifyErrorMsg("An unknown error occurred.");
         }
-        setBuyButtonState(false);
         setBuyButtonText('Buy Now');
       }
     } else {
@@ -393,7 +378,6 @@ const BuyNowBox = () => {
       if (selectedCurrency.name == 'USDT') {
         // if buy amount more then avail balance of user
         if (parseFloat(buyAmount) > parseFloat(usdtBalance)) {
-          setBuyButtonState(false);
           setBuyButtonText('Buy Now');
           notifyErrorMsg('Insufficient USDT Balance');
           return;
@@ -403,7 +387,6 @@ const BuyNowBox = () => {
         if (allowanceUSDT < parseFloat(buyAmount.toString())) {
           // then first user need to approve usdt for buying
           try {
-            setBuyButtonState(true);
             setBuyButtonText('Approving...');
 
             const hash = await writeContractAsync({
@@ -426,19 +409,16 @@ const BuyNowBox = () => {
               const txn2 = await publicClient.waitForTransactionReceipt({ hash });
               if (txn2.status == "success") {
                 notifySuccess(`${expectedTokens} CYNQ Bought Successfully`);
-                setBuyButtonState(false);
                 setBuyButtonText('Buy Now');
               }
             }
           } catch (error) {
             console.log("something wrong", error);
-            setBuyButtonState(false);
             setBuyButtonText('Buy Now');
             notifyErrorMsg('An unknown error occurred');
           }
         } else {
           try {
-            setBuyButtonState(true);
             setBuyButtonText('Buying...');
             const hash = await writeContractAsync({
               abi: presaleABI.abi,
@@ -451,12 +431,8 @@ const BuyNowBox = () => {
             if (txn.status == "success") {
 
               notifySuccess(`${expectedTokens} CYNQ Bought Successfully`);
-              setBuyButtonState(false);
               setBuyButtonText('Buy Now');
             }
-
-
-
           } catch (error) {
             console.log(error);
             // 🔹 Type assertion to ensure error has 'shortMessage'
@@ -465,9 +441,7 @@ const BuyNowBox = () => {
             } else {
               notifyErrorMsg("An unknown error occurred.");
             }
-            setBuyButtonState(false);
             setBuyButtonText('Buy Now');
-
           }
         }
       }
@@ -669,8 +643,8 @@ const BuyNowBox = () => {
           <div className="grid grid-cols-3 gap-[9px] sm:gap-[11px] mt-4">
             {[
               { discount: "5", amount: "500" },
-              { discount: "7", amount: "1000" },
-              { discount: "10", amount: "1500" },
+              { discount: "10", amount: "1000" },
+              { discount: "15", amount: "1500" },
             ].map((item) => (
               <button
                 key={item.amount}
@@ -702,7 +676,7 @@ const BuyNowBox = () => {
               onClick={handleBuyToken}
             >
               <div className={styles.gradientBorder} />
-              <h3 className={styles.buttonContentBuyNow}> {t("home.buyNowBox.buyNow")}</h3>
+              <h3 className={styles.buttonContentBuyNow}>{buyButtonText}</h3>
               <div className={styles.glowEffectBuyNow} />
             </button>
           ) : (

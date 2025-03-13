@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { I18nextProvider } from "react-i18next";
 import i18n from "../../../i18n";
 import useLanguage from "../../hooks/useLanguage";
@@ -10,10 +10,23 @@ import Referral from "../../components/Staking/Referral";
 import Leaderboard from "../../components/Staking/Leaderboard";
 import { useTranslation } from "react-i18next";
 
+import stakingAbi from "../../components/contractABI/stakingAbi";
+import tokenAbi from "../../components/contractABI/tokenAbi";
+import { useAppKit } from "@reown/appkit/react";
+import { useAccount, useWriteContract } from "wagmi";
 const Staking = () => {
 
-  // staking address
-  // 0x2bf950f5789c4859fcf89c9a84bbfc30c3e244c9
+  // wallet open 
+  const {open} = useAppKit()
+  const {writeContractAbi} = useWriteContract()
+  const {account,isConnected} = useAccount()
+  const stakeAddress = "0x2bf950f5789c4859fcf89c9a84bbfc30c3e244c9";
+  const tokenAddress = "0x888632bb147ba407d85f1881a817c0481ff8dcda";
+
+
+  const [tokenBalance, setTokenBalance] = useState(0)
+  const [stakingReward, setStakingReward] = useState(0)
+  const [referralEarnings, setReferralEarnings] = useState(0)
   useLanguage();
   const { t } = useTranslation();
 
@@ -52,9 +65,7 @@ const Staking = () => {
               </h2>
             </div>
           </div>
-
           <StakingSection />
-
           {/* Referral & Leaderboard */}
           <div className="grid grid-rows-1 lg:grid-cols-2 gap-[20px]">
             <Referral />
