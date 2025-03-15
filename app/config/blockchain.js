@@ -5,7 +5,7 @@ import { mainnet } from "viem/chains";
 const mainnetClient = createPublicClient(
     {
         chain: mainnet,
-        transport: http('https://eth-mainnet.g.alchemy.com/v2/7MhrOFJdbrpHzDB8yhYw9mD0zjzGPeux')
+        transport: http('https://eth-mainnet.g.alchemy.com/v2/QGY9HikeWRdC995PRJFhQZK2N0HIyGgv')
     }
 )
 

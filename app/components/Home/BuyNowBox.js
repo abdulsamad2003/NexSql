@@ -144,7 +144,7 @@ const BuyNowBox = () => {
       const remaining = 1500 - amountInUSD;
       setBonusBelowText(`Add $${parseFloat(remaining).toFixed(2)} more and get 15% extra tokens!`);
     } else if (amountInUSD >= 1500) {
-      setBonusBelowText(`${amountInUSD}congrats you get 15% extra tokens!`);
+      setBonusBelowText(`congrats you get 15% extra tokens!`);
     }
   }, [buyAmount, selectedCurrency]);
 
@@ -280,12 +280,22 @@ const BuyNowBox = () => {
       ); 
       let tokens = Number(resultETH) / 1e18;
 
-      // add bonus when user manually add more than 250 usdt
-      if (buyAmount >= 500 && buyAmount <= 999) tokens *= 1.05;
-      else if (buyAmount >= 1000 && buyAmount <= 1499) tokens *= 1.10;
-      else if (eth >= 1500) tokens *= 1.15;
-      console.log(tokens)
-      setExpectedTokens(tokens);
+      // add bonus when user manually add more than 500 usdt
+      if(selectedCurrency.name === "ETH") {
+        if(eth < 500) tokens *= 1;
+        else if (eth >= 500 && eth <= 999) tokens *= 1.05;
+        else if (eth >= 1000 && eth <= 1499) tokens *= 1.10;
+        else if (eth >= 1500) tokens *= 1.15;
+        console.log(tokens)
+        setExpectedTokens(tokens);
+      } else if(selectedCurrency.name === "USDT" || selectedCurrency.name === "USDC"){
+        if(amount < 500) tokens *= 1;
+        else if (amount >= 500 && amount <= 999) tokens *= 1.05;
+        else if (amount >= 1000 && amount <= 1499) tokens *= 1.10;
+        else if (amount >= 1500) tokens *= 1.15;
+        console.log(tokens)
+        setExpectedTokens(tokens);
+      }
     } catch (error) {
       console.log("unable to load resultEth", error)
     }
@@ -335,9 +345,22 @@ const BuyNowBox = () => {
             :await contractETH.usdtToTokens(1, eth.toString())  
       let tokens = Number(resultETH) / 1e18; // Convert to normal number
          // add bonus when user manually add more than 250 usdt
-         if (eth >= 500 && eth <= 999) tokens *= 1.05;
-         else if (eth >= 1000 && eth <= 1499) tokens *= 1.10;
-         else if (eth >= 1500) tokens *= 1.15;
+         // add bonus when user manually add more than 500 usdt
+      if(selectedCurrency.name === "ETH") {
+        if(eth < 500) tokens *= 1;
+        else if (eth >= 500 && eth <= 999) tokens *= 1.05;
+        else if (eth >= 1000 && eth <= 1499) tokens *= 1.10;
+        else if (eth >= 1500) tokens *= 1.15;
+        console.log(tokens)
+        setExpectedTokens(tokens);
+      } else if(selectedCurrency.name === "USDT" || selectedCurrency.name === "USDC"){
+        if(amount < 500) tokens *= 1;
+        else if (amount >= 500 && amount <= 999) tokens *= 1.05;
+        else if (amount >= 1000 && amount <= 1499) tokens *= 1.10;
+        else if (amount >= 1500) tokens *= 1.15;
+        console.log(tokens)
+        setExpectedTokens(tokens);
+      }
       setExpectedTokens(tokens);
     } catch (error) {
       console.error('Error:', error);
@@ -457,7 +480,6 @@ async function processTransaction(abi,address,functionName, value, args ) {
   
   // use use-effect for isConnected and more things for prevent it from running multiple times(infinite loop)
   useEffect(() => {
-    fetchBalance()
     if (isConnected) {
       if (totalAmountInfo) {
         const balance = web3.utils.fromWei(totalAmountInfo.toString(), 'ether')
