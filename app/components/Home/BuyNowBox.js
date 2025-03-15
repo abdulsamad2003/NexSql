@@ -139,12 +139,12 @@ const BuyNowBox = () => {
       setBonusBelowText(`Add $${parseFloat(remaining).toFixed(2)} more and get 5% extra tokens!`); 
     } else if (amountInUSD >= 500 && amountInUSD < 1000) {
       const remaining = 1000 - amountInUSD;
-      setBonusBelowText(`Add $${parseFloat(remaining).toFixed(2)} more and get 7% extra tokens!`);
+      setBonusBelowText(`Add $${parseFloat(remaining).toFixed(2)} more and get 10% extra tokens!`);
     } else if (amountInUSD >= 1000 && amountInUSD < 1500) {
       const remaining = 1500 - amountInUSD;
-      setBonusBelowText(`Add $${parseFloat(remaining).toFixed(2)} more and get 10% extra tokens!`);
+      setBonusBelowText(`Add $${parseFloat(remaining).toFixed(2)} more and get 15% extra tokens!`);
     } else if (amountInUSD >= 1500) {
-      setBonusBelowText("congrats you get 10% extra tokens!");
+      setBonusBelowText(`${amountInUSD}congrats you get 15% extra tokens!`);
     }
   }, [buyAmount, selectedCurrency]);
 
@@ -226,7 +226,7 @@ const BuyNowBox = () => {
         balance = web3.utils.fromWei(balance, "ether");
         setTokenBalance(balance)
       } catch (error) {
-        console.log('Unbale to load user claim data', error)
+        console.log('Unable to load user claim data', error)
       }
 
       // call token contract when user is connected
@@ -281,9 +281,9 @@ const BuyNowBox = () => {
       let tokens = Number(resultETH) / 1e18;
 
       // add bonus when user manually add more than 250 usdt
-      if (amount >= 500 && amount <= 999) tokens *= 1.05;
-      else if (amount >= 1000 && amount <= 1499) tokens *= 1.10;
-      else if (amount >= 1500) tokens *= 1.15;
+      if (buyAmount >= 500 && buyAmount <= 999) tokens *= 1.05;
+      else if (buyAmount >= 1000 && buyAmount <= 1499) tokens *= 1.10;
+      else if (eth >= 1500) tokens *= 1.15;
       console.log(tokens)
       setExpectedTokens(tokens);
     } catch (error) {
@@ -335,9 +335,9 @@ const BuyNowBox = () => {
             :await contractETH.usdtToTokens(1, eth.toString())  
       let tokens = Number(resultETH) / 1e18; // Convert to normal number
          // add bonus when user manually add more than 250 usdt
-         if (amount >= 500 && amount <= 999) tokens *= 1.05;
-         else if (amount >= 1000 && amount <= 1499) tokens *= 1.10;
-         else if (amount >= 1500) tokens *= 1.15;
+         if (eth >= 500 && eth <= 999) tokens *= 1.05;
+         else if (eth >= 1000 && eth <= 1499) tokens *= 1.10;
+         else if (eth >= 1500) tokens *= 1.15;
       setExpectedTokens(tokens);
     } catch (error) {
       console.error('Error:', error);
@@ -375,16 +375,17 @@ async function processTransaction(abi,address,functionName, value, args ) {
       notifyErrorMsg('Please enter amount');
       return;
     }
+  
     const publicClient = getClient();
     const adr = window.location.href;
     const q = url.parse(adr, true);
     const qdata = q.query;
-    let referral = qdata.referral || "0x0000000000000000000000000000000000000000"
-
+    let referral = qdata.referral || "0x0000000000000000000000000000000000000000";
+  
     if (selectedCurrency.name == 'ETH') {
-      // if buy amount more then avail balance of user 
+      // If buy amount is more than available balance of user
       if (parseFloat(buyAmount) > parseFloat(web3.utils.fromWei(ethBalance.toString(), 'ether'))) {
-        notifyErrorMsg('Insufficient ETH Balance')
+        notifyErrorMsg('Insufficient ETH Balance');
         return;
       }
       await processTransaction(
@@ -393,43 +394,67 @@ async function processTransaction(abi,address,functionName, value, args ) {
         "buyWithEth", // functionName
         parseEther(String(buyAmount)), // value
         [referral]  // args
-      )
-    } else if(selectedCurrency.name == 'USDT' || selectedCurrency.name == 'USDC') {
-      
-      const isUSDT = selectedCurrency.name === 'USDT';
-      const balance = isUSDT ? usdtBalance : usdcBalance;
-      const allowance = isUSDT ? allowanceUSDT : allowanceUSDC;
-      const tokenAddress = isUSDT ? usdtAddress : usdcAddress;
-      const buyFunction = isUSDT ? "buyWithUSDT" : "buyWithUSDC";
-  
-      if (parseFloat(buyAmount) > parseFloat(balance)) {
-        notifyErrorMsg(`Insufficient ${selectedCurrency.name} Balance`);
+      );
+    } else if (selectedCurrency.name == 'USDT') {
+      // Handling for USDT
+      if (parseFloat(buyAmount) > parseFloat(usdtBalance)) {
+        notifyErrorMsg('Insufficient USDT Balance');
         return;
       }
-
-      if( allowance < parseFloat(buyAmount.toString())) {
-          setBuyButtonText('Approving...');
-          await processTransaction(
-            tokenAbi.abi, // abi
-            tokenAddress, // address
-            "approve", // functionName
-            0, // value
-            [presaleAddress, buyAmount],// args
-          )
-          notifySuccess(`${selectedCurrency.name} Approved Successfully`);
+  
+      if (allowanceUSDT < parseFloat(buyAmount.toString())) {
+        setBuyButtonText('Approving...');
+        await processTransaction(
+          tokenAbi.abi, // abi
+          usdtAddress, // address
+          "approve", // functionName
+          0, // value
+          [presaleAddress, buyAmount], // args
+        );
+        notifySuccess('USDT Approved');
       }
-      // Now, proceed with buying after approval (or directly if already approved)
-    await processTransaction(
-      presaleAbi.abi,
-      presaleAddress,
-      buyFunction,
-      0,
-      [buyAmount, referral],
-    );
+  
+      // Proceed with buying after approval (or directly if already approved)
+      await processTransaction(
+        presaleAbi.abi,
+        presaleAddress,
+        "buyWithUSDT", // Function name for USDT
+        0,
+        [buyAmount, referral], // args
+      );
+    } else if (selectedCurrency.name == 'USDC') {
+      // Handling for USDC
+      if (parseFloat(buyAmount) > parseFloat(usdcBalance)) {
+        notifyErrorMsg('Insufficient USDC Balance');
+        return;
+      }
+  
+      if (allowanceUSDC < parseFloat(buyAmount.toString())) {
+        setBuyButtonText('Approving...');
+        await processTransaction(
+          tokenAbi.abi, // abi
+          usdcAddress, // address
+          "approve", // functionName
+          0, // value
+          [presaleAddress, buyAmount], // args
+        );
+        notifySuccess('USDC Approved Successfully');
+      }
+  
+      // Proceed with buying after approval (or directly if already approved)
+      await processTransaction(
+        presaleAbi.abi,
+        presaleAddress,
+        "buyWithUSDC", // Function name for USDC
+        0,
+        [buyAmount, referral], // args
+      );
     }
-    // update user balance after buy
+  
+    // Update user balance after purchase
     await fetchBalance();
   }
+  
   // use use-effect for isConnected and more things for prevent it from running multiple times(infinite loop)
   useEffect(() => {
     fetchBalance()
