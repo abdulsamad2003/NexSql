@@ -252,7 +252,7 @@
       "totalStaking": "Total Staking",
       "stakingPeriod": "Staking period",
       "apr": "APR {{apr}}",
-      "placeholder": "10,000.00 VRN",
+      "placeholder": "Enter Staking value",
       "max": "MAX",
       "stakeNow": "STAKE NOW",
       "stakeAmount": "Stake amount",

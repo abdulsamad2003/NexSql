@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import { I18nextProvider } from "react-i18next";
 import i18n from "../../../i18n";
 import useLanguage from "../../hooks/useLanguage";
@@ -12,23 +12,73 @@ import { useTranslation } from "react-i18next";
 
 import stakingAbi from "../../components/contractABI/stakingAbi";
 import tokenAbi from "../../components/contractABI/tokenAbi";
+import presaleAbi from "../../components/contractABI/presaleAbi";
 import { useAppKit } from "@reown/appkit/react";
-import { useAccount, useWriteContract } from "wagmi";
+import { useAccount, useReadContract, useWriteContract } from "wagmi";
+import { ethers } from "ethers";
+import Web3 from "web3"
+
+
+// setup blockchain here 
+const Provider = new Web3.providers.HttpProvider("https://rpc.ankr.com/eth");
+const web3 = new Web3(Provider);
 const Staking = () => {
-
-  // wallet open 
-  const {open} = useAppKit()
-  const {writeContractAbi} = useWriteContract()
-  const {account,isConnected} = useAccount()
-  const stakeAddress = "0x2bf950f5789c4859fcf89c9a84bbfc30c3e244c9";
-  const tokenAddress = "0x888632bb147ba407d85f1881a817c0481ff8dcda";
-
-
-  const [tokenBalance, setTokenBalance] = useState(0)
-  const [stakingReward, setStakingReward] = useState(0)
-  const [referralEarnings, setReferralEarnings] = useState(0)
   useLanguage();
   const { t } = useTranslation();
+
+  // wallet open 
+  const {isConnected, address} = useAccount()
+  const stakeAddress = "0x2bf950f5789c4859fcf89c9a84bbfc30c3e244c9";
+  const tokenAddress = "0x888632bb147ba407d85f1881a817c0481ff8dcda";
+  const [stackableTokenBalance, setStackableTokenBalance] = useState(0)
+  const [totalReward, setTotalReward] = useState(0);
+  const [referralEarnings, setReferralEarnings] = useState(0)
+    // showing how much user who connected will claim data
+  // const { data: totalAmountInfo } = useReadContract({
+  //   abi: presaleAbi.abi,
+  //   address: presaleAddress,
+  //   functionName: 'userClaimData',
+  //   args: [address],
+  // })
+  // show user who connected all token in acc
+  const { data: balanceTokenData } = useReadContract({
+    abi: tokenAbi.abi,
+    address: tokenAddress,
+    functionName: 'balanceOf',
+    args: [address],
+  })
+  //
+
+ // for total reward user will get
+
+ // Fetch all user stakes
+ const { data: userStakes } = useReadContract({
+   abi: stakingAbi.abi,
+   address: stakeAddress,
+   functionName: "getUserStakes",
+   args: [address],
+ });
+  // use use-effect for isConnected and more things for prevent it from running multiple times(infinite loop)
+  useEffect(() => {
+    if (isConnected) {
+        // all rewards user will get from staking
+        if(userStakes){
+          const total = userStakes.reduce((acc, stake) => {
+            const amount = BigInt(stake.amount.toString()); // Convert to BigInt if it's not
+            const rewardRate = BigInt(stake.rewardRate.toString()); // Convert rewardRate to BigInt if it's not
+            const reward = (amount * rewardRate) / BigInt(100); // Calculate reward using BigInt
+            return acc + reward;
+          }, BigInt(0)); 
+          setTotalReward(Number(web3.utils.fromWei(total.toString(), "ether")));
+        }
+      if (balanceTokenData) {
+        console.log(balanceTokenData, "balanceTokenData")
+        const stackableBalance = web3.utils.fromWei(balanceTokenData.toString(), "ether");
+        setStackableTokenBalance(stackableBalance);
+      }
+    }
+  }, [isConnected, address, balanceTokenData, userStakes],)
+
 
   return (
     <I18nextProvider i18n={i18n}>
@@ -45,7 +95,7 @@ const Staking = () => {
                 {t("staking.totalVRNBalance")}
               </h3>
               <h2 className="text-white text-[24px] leading-[38.4px] font-normal">
-                0
+                {stackableTokenBalance}
               </h2>
             </div>
             <div className="w-full relative px-[15px] sm:px-5 py-[12px] lg:py-[12px] flex lg:flex-col flex-row lg:items-start items-center justify-between rounded-[10px] lg:rounded-[12px] shadow-custom">
@@ -53,7 +103,7 @@ const Staking = () => {
                 {t("staking.stakingReward")}
               </h3>
               <h2 className="text-white text-[24px] leading-[38.4px] font-normal">
-                0
+                {totalReward}
               </h2>
             </div>
             <div className="w-full relative px-[15px] sm:px-5 py-[12px] lg:py-[12px] flex lg:flex-col flex-row lg:items-start items-center justify-between rounded-[10px] lg:rounded-[12px] shadow-custom">
