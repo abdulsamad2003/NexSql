@@ -10,6 +10,7 @@ import stakingAbi from "../contractABI/stakingAbi";
 import { getClient } from "../../config/blockchain";
 import toast from "react-hot-toast";
 import { parseEther } from "viem";
+import $ from "jquery";
 
 // setup blockchain here 
 const Provider = new Web3.providers.HttpProvider("https://rpc.ankr.com/eth");
@@ -24,6 +25,7 @@ const StakingSection = () => {
   const [estimatedProfit, setEstimatedProfit] = useState(0);
   const [totalAmount, setTotalAmount] = useState(0);
   const [unlockDate, setUnlockDate] = useState("");
+  const [myStakeAmount, setMyStakeAmount] = useState('0');
 
   const formatNumberWithCommas = (number) => {
     return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -93,7 +95,32 @@ const StakingSection = () => {
       setTotalAmount(0);
       setUnlockDate("");
     }
+
   }, [numericStakeAmount, selectedPeriodIndex]);
+    const getDate = (timestamp) => {
+    const dateObj = new Date(timestamp * 1000);
+    const utcString = dateObj.toUTCString();
+    const year = dateObj.getFullYear();
+    const month = dateObj.getMonth();
+    const day = dateObj.getDay();
+    const hour = dateObj.getHours();
+    const minute = dateObj.getMinutes();
+    const second = dateObj.getSeconds();
+  //2024-01-15 09:45
+    return year+'-'+month+'-'+day+' '+hour+':'+minute+':'+second;
+  };
+  const getLockDuration = (startTime, endTime) => {
+    const date1 = new Date(startTime * 1000).getTime();
+    const date2 = new Date(endTime * 1000).getTime();
+
+    const Difference_In_Time = date2 - date1;
+
+  // Calculating the no. of days between
+  // two dates
+  const Difference_In_Days = Math.round(Difference_In_Time / (1000 * 3600 * 24));
+
+  return Difference_In_Days;
+  }
 
 
   // Staking options
@@ -152,7 +179,7 @@ const StakingSection = () => {
     const [stakeButtonText, setStakeButtonText] = useState("Stake Now");
 
     // fetch all data from token and stake contract
-    const {data: balanceTokenData} = useReadContract({
+  const {data: balanceTokenData} = useReadContract({
       abi: tokenAbi.abi,
       address: tokenAddress,
       functionName: 'balanceOf',
@@ -232,11 +259,11 @@ async function handleStakeToken(){
           abi: stakingAbi.abi,
           address: stakeAddress,
           functionName: 'stakeVRN',
-          args: [parseEther(stakeAmount.toString()), days*86400]
+          args: [stakeAmount.toString(), days*86400]
         })
         const txn2 = await publicClient.waitForTransactionReceipt( { hash } );
         if(txn2.status === "success") {
-          notifySuccess('Staked `'+stakeAmount+'` CYNQ Successfully')
+          notifySuccess('Staked `'+stakeAmount+'` VRN Successfully')
           setStakeButtonText("Stake Now")
         } else {
           notifyErrorMsg("Error in staking after approved")
@@ -258,11 +285,11 @@ async function handleStakeToken(){
           abi: stakingAbi.abi,
           address: stakeAddress,
           functionName: 'stakeVRN',
-          args: [parseEther(stakeAmount.toString()),days*86400]
+          args: [stakeAmount.toString(),days*86400]
         })
         const txn = await publicClient.waitForTransactionReceipt( { hash } );
         if(txn.status === "success") {
-          notifySuccess('Staked `'+stakeAmount+'` CYNQ Successfully')
+          notifySuccess('Staked `'+stakeAmount+'`CYNQ Successfully')
           setStakeButtonText("Stake Now")
         }
       }catch(error){
@@ -278,6 +305,138 @@ async function handleStakeToken(){
 
   }
 
+  async function handleWithdraw(index)  {
+    const publicClient = getClient();
+        try {
+          $('#'+index).attr("disabled", 'true');
+          $('#'+index).html(t('staking.stakingHistory.withdrawing'));
+    
+          const hash = await  writeContractAsync({ 
+            abi: stakingAbi.abi,
+            address: stakeAddress,
+            functionName: 'withdraw',
+            args:[index],
+          })
+    
+          const txn = await publicClient.waitForTransactionReceipt( { hash } );
+              
+          if(txn.status == "success"){
+            
+            notifySuccess('Withdraw TXN Successful'); 
+            $('#'+index).attr("disabled", 'false');
+            $('#'+index).html(t('staking.stakingHistory.reStake')); 
+
+            const withdrawnAmount = ethers.formatUnits(stakeData[index].amount.toString(), 'ether');
+            // Subtract the withdrawn stake amount from myStakeAmount
+           console.log(withdrawnAmount)
+           setMyStakeAmount((prevStakeAmount) => {
+            const newAmount = prevStakeAmount - Number(withdrawnAmount);
+            return newAmount.toString();
+          });
+          }
+        }catch(error){
+              console.log(error);
+               // 🔹 Type assertion to ensure error has 'shortMessage'
+              if (error instanceof Error && "shortMessage" in error) {
+                notifyErrorMsg(error.shortMessage);
+              } else {
+                  notifyErrorMsg("An unknown error occurred.");
+              }
+              $('#'+index).attr("disabled", 'false');
+              $('#'+index).html(t('staking.stakingHistory.withdraw')); 
+        }
+  }
+
+
+ async function handleRestake(index, amount, lockDuration){
+  const publicClient = getClient();
+  if(Number(amount) > Number(web3.utils.toWei(Number(tokenBalance), 'ether'))){
+    notifyErrorMsg('Not enough token balance');
+     return;
+  }
+
+  if(allowance < parseFloat(amount.toString())) {
+    try {
+
+      $('#'+index).attr("disabled", 'false');
+      $('#'+index).html('Approving...'); 
+
+      const hash = await  writeContractAsync({ 
+        abi: tokenAbi.abi,
+        address: tokenAddress,
+        functionName: 'approve',
+        args:[stakeAddress, amount.toString()],
+      })
+
+      const txn = await publicClient.waitForTransactionReceipt( { hash } );
+      if(txn.status == "success"){
+        notifySuccess('Approve TXN Successful'); 
+        $('#'+index).attr("disabled", 'false');
+        $('#'+index).html(t('restaking')); 
+      
+          const hash = await  writeContractAsync({ 
+            abi: stakingAbi.abi,
+            address: stakeAddress,
+            functionName: 'stakeVRN',
+            args:[amount.toString(), Number(lockDuration) * 86400],
+          })
+
+          const txn2 = await publicClient.waitForTransactionReceipt( { hash } );
+          if(txn2.status == "success"){
+        
+            notifySuccess('Restaked Successfully');
+            $('#'+index).attr("disabled", 'false');
+            $('#'+index).html(t('withdraw')); 
+          }
+      }
+    }catch(error){
+          console.log(error);
+          // 🔹 Type assertion to ensure error has 'shortMessage'
+           if (error instanceof Error && "shortMessage" in error) {
+            notifyErrorMsg(error.shortMessage);
+          } else {
+              notifyErrorMsg("An unknown error occurred.");
+          }
+          $('#'+index).attr("disabled", 'false');
+          $('#'+index).html(t('restake'));
+    }
+
+  }else{
+    try {
+
+      $('#'+index).attr("disabled", 'true');
+      $('#'+index).html(t('restaking'));
+
+      const hash = await  writeContractAsync({ 
+        abi: stakingAbi.abi,
+        address: stakeAddress,
+        functionName: 'stakeVRN',
+        args:[amount.toString(), Number(lockDuration) * 86400],
+      })
+
+      const txn = await publicClient.waitForTransactionReceipt( { hash } );
+          
+      if(txn.status == "success"){
+        
+        notifySuccess('Restake TXN Successful'); 
+        $('#'+index).attr("disabled", 'false');
+        $('#'+index).html(t('withdrawn')); 
+      }
+    }catch(error){
+          console.log(error);
+          // 🔹 Type assertion to ensure error has 'shortMessage'
+           if (error instanceof Error && "shortMessage" in error) {
+            notifyErrorMsg(error.shortMessage);
+          } else {
+              notifyErrorMsg("An unknown error occurred.");
+          }
+          $('#'+index).attr("disabled", 'false');
+          $('#'+index).html(t('restake')); 
+    }
+  }
+}
+
+  
   useEffect(() => {
     if(rewardRate3MData){
       const selectedOption = stakingOptions[selectedPeriodIndex];
@@ -307,17 +466,17 @@ async function handleStakeToken(){
       }
 
 
-      // if(Array.isArray(stakeData)){
-      //   myStakes = stakeData;
-      //     let total = 0;
-      //     for(let i = 0;i < stakeData.length; i++){
-      //       total += Number(ethers.formatUnits(stakeData[i].amount.toString(),'ether'));
-      //       setMyStakeAmount(total.toString())
-      //      // console.log(stakeData[i]);
-      //     }
-      // }
+      if(Array.isArray(stakeData)){
+        myStakes = stakeData;
+          let total = 0;
+          for(let i = 0;i < stakeData.length; i++){
+            total += Number(ethers.formatUnits(stakeData[i].amount.toString(),'ether'));
+            setMyStakeAmount(total.toString())
+           console.log(Number(ethers.formatUnits(stakeData[i].amount.toString(),'ether')));
+          }
+      }
     }
-  }, [isConnected, balanceTokenData, rewardRate3MData, rewardRate6MData, rewardRate9MData, rewardRate12MData])
+  }, [isConnected, balanceTokenData,stakeData, rewardRate3MData, rewardRate6MData, rewardRate9MData, rewardRate12MData])
   return (
     <div className="mt-[20px] rounded-[12px] bg-[#0B0015] border border-[#440675] px-2.5 pb-5 pt-2.5 lg:p-[20px]">
       <h2 className="text-white text-[22px] leading-[28.8px] font-bold lg:text-left text-center">
@@ -329,7 +488,7 @@ async function handleStakeToken(){
           {t("staking.stakingSection.totalStaking")}
         </h2>
         <h3 className="text-white text-[22px] leading-[24px] font-normal">
-          0
+        {myStakeAmount.toLocaleString()}
         </h3>
       </div>
 
@@ -459,8 +618,6 @@ async function handleStakeToken(){
               </button>
             )
           }
-      
-
           <div
             className="w-full border border-[#440675] bg-[#1C0035] rounded-xl px-5 py-[18px] text-white space-y-[10px] sm:space-y-[12px]"
             style={{ backdropFilter: "blur(30px)" }}
@@ -496,38 +653,38 @@ async function handleStakeToken(){
       </div>
 
           {/* tale component will come here */}
-          {/* <div className="bg-[#1e1e1e] rounded-xl px-[2px] pb-[3px] shadow-md">
-              <div className="flex py-[20px] px-[30px] items-center gap-2">
-                <h2 className="text-[1rem] font-[500] text-[#CCCEEF]">
-                  {t("staking_history_title")}
+          <div className="bg-[#440675] rounded-xl px-[2px] pb-[3px] pt-[3px] shadow-md mt-4">
+              <div className="flex py-[20px] px-[30px]  items-center gap-2">
+                <h2 className="text-[22px] leading-[28.8px] font-bold lg:text-left text-center text-white">
+                  {t("staking.stakingHistory.title")}
                 </h2>
               </div>
         
-              <div className="bg-black rounded-lg">
+              <div className="border border-[#440675] bg-[#0B0015] rounded-lg">
                 <div className="overflow-x-auto">
                   <table className="w-full min-w-[800px] border-collapse">
-                    <thead className="bg-black border-b border-[#1e1e1e]">
+                    <thead className="bg-black border-b border-[#440675]">
                       <tr>
-                        <th className="text-[#CCCEEF] text-[0.75rem] font-[600] text-left px-[30px] py-[20px]">
-                          {t("amount")}
+                        <th className="text-left text-white text-[16px] md:text-[18px] leading-[24px] font-medium px-[30px] py-[20px]">
+                          {t("staking.stakingHistory.stakedAmount")}
                         </th>
-                        <th className="text-[#CCCEEF] whitespace-nowrap text-[0.75rem] font-[600] text-left px-[30px] py-[20px]">
-                          {t("lock_duration")}
+                        <th className="text-left text-white text-[16px] md:text-[18px] leading-[24px] font-medium px-[30px] py-[20px]">
+                          {t("staking.stakingHistory.stakingPeriod")}
                         </th>
-                        <th className="text-[#CCCEEF] whitespace-nowrap text-[0.75rem] font-[600] text-left px-[30px] py-[20px]">
-                          {t("fixed_returns")}
+                        <th className="ttext-left text-white text-[16px] md:text-[18px] leading-[24px] font-medium px-[30px] py-[20px]">
+                          {t("staking.stakingHistory.apr")}
                         </th>
-                        <th className="text-[#CCCEEF] text-[0.75rem] font-[600] text-left px-[30px] py-[20px]">
-                          {t("start_time")}
+                        <th className="text-left text-white text-[16px] md:text-[18px] leading-[24px] font-medium px-[30px] py-[20px]">
+                          {t("staking.stakingHistory.startTime")}
                         </th>
-                        <th className="text-[#CCCEEF] text-[0.75rem] font-[600] text-left px-[30px] py-[20px]">
-                          {t("end_time")}
+                        <th className="text-left text-white text-[16px] md:text-[18px] leading-[24px] font-medium px-[30px] py-[20px]">
+                          {t("staking.stakingHistory.endTime")}
                         </th>
-                        <th className="text-[#CCCEEF] text-[0.75rem] font-[600] text-left px-[30px] py-[20px]">
-                          {t("status")}
+                        <th className="text-left text-white text-[16px] md:text-[18px] leading-[24px] font-medium px-[30px] py-[20px]">
+                          {t("staking.stakingHistory.status")}
                         </th>
-                        <th className="text-[#CCCEEF] text-[0.75rem] font-[600] text-left px-[30px] py-[20px]">
-                          {t("action")}
+                        <th className="text-left text-white text-[16px] md:text-[18px] leading-[24px] font-medium px-[30px] py-[20px]">
+                          {t("staking.stakingHistory.action")}
                         </th>
                       </tr>
                     </thead>
@@ -536,19 +693,19 @@ async function handleStakeToken(){
                         myStakes.map((item, index) => (
                           <tr key={index} className="border-b border-[#1e1e1e]">
                             <td className="text-white text-[0.75rem] px-[30px] py-[20px]">
-                              {(ethers.formatUnits(item.amount.toString(),'ether'))} CYNQ
+                              {(ethers.formatUnits(item.amount.toString(),'ether'))} VRN
                             </td>
                             <td className="text-white text-[0.75rem] px-[30px] py-[20px]">
-                              { (getLockDuration(Number(item.startTime), Number(item.endTime)) / 30) }M
+                              {stakingOptions[selectedPeriodIndex].period}
                             </td>
                             <td className="text-white text-[0.75rem] px-[30px] py-[20px]">
-                              {item.rewardRate}%
+                                {stakingOptions[selectedPeriodIndex].apr}
                             </td>
                             <td className="text-white text-[0.75rem] px-[30px] py-[20px]">
-                              { getDate(Number(item.startTime))}
+                            { getDate(Number(item.startTime))}                            
                             </td>
                             <td className="text-white text-[0.75rem] px-[30px] py-[20px]">
-                            { getDate(Number(item.endTime))}
+                            { getDate(Number(item.endTime))}                           
                             </td>
                             <td className="text-white text-[0.75rem] px-[30px] py-[20px]">
                               <span
@@ -559,8 +716,8 @@ async function handleStakeToken(){
                                 }`}
                               >
                                 {item.withdrawn === true
-                                  ? t("withdraw")
-                                  : t("active")}
+                                  ? t("staking.stakingHistory.withdraw")
+                                  : t("staking.stakingHistory.active")}
                               </span>
                             </td>
                             <td className="text-white whitespace-nowrap text-[0.875rem] px-[30px] py-[20px]">
@@ -579,8 +736,8 @@ async function handleStakeToken(){
                                 }`}
                               >
                                 {item.withdrawn === false
-                                  ? t("withdraw")
-                                  : t("restake")}
+                                  ? t("staking.stakingHistory.withdraw")
+                                  : t("staking.stakingHistory.reStake")}
                               </button>
                             </td>
                           </tr>
@@ -589,9 +746,9 @@ async function handleStakeToken(){
                         <tr>
                           <td
                             colSpan={7}
-                            className="text-center text-[0.875rem] text-white/50 py-5"
+                            className="text-center text-white text-[16px] md:text-[18px] leading-[24px] font-medium py-5"
                           >
-                            {t("no_stakes_found")}
+                            {t("staking.stakingHistory.no_stakes_found")}
                           </td>
                         </tr>
                       )}
@@ -599,7 +756,7 @@ async function handleStakeToken(){
                   </table>
                 </div>
               </div>
-            </div> */}
+            </div>
     </div>
   );
 };

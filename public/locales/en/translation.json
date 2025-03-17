@@ -258,9 +258,26 @@
       "stakeAmount": "Stake amount",
       "estimatedProfit": "Estimated Profit",
       "total": "Total",
-      "lcaiToBeLocked": "LCAI to be locked",
+      "lcaiToBeLocked": "VRN to be locked",
       "duration": "Duration",
       "unlockOn": "Unlock On"
+    },
+    "stakingHistory": {
+      "title": "STAKING HISTORY",
+      "stakedAmount": "STAKED AMOUNT",
+      "stakingPeriod": "LOCK DURATION",
+      "apr": "FIXED RETURN",
+      "startTime": "START TIME",
+      "endTime":"END TIME",
+      "status": "STATUS",
+      "action": "ACTION",
+      "unstake": "UNSTAKE",
+      "reStake": "RESTAKE",
+      "withdraw": "WITHDRAWN",
+      "withdrawing": "WITHDRAWING",
+      "active": "Active",
+      "completed": "Completed",
+      "no_stakes_found": "No staked found"
     },
     "referral": {
       "title": "Referral",

@@ -1,11 +1,17 @@
 import Image from "next/image";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import Web3 from 'web3'
+import presaleAbi from "../contractABI/presaleAbi.json"
+import { useAccount, useReadContract } from "wagmi";
+
+const Provider = new Web3.providers.HttpProvider("https://bsc-dataseed.binance.org/")
+const web3 = new Web3(Provider)
 
 const Referral = () => {
+
   const { t } = useTranslation();
-  const referralLink = "https://vronai.net/dashboard/?ref=JXNRMRMHXT";
   const [copied, setCopied] = useState(false);
 
   const handleCopy = () => {
@@ -14,6 +20,42 @@ const Referral = () => {
 
     setTimeout(() => setCopied(false), 2000);
   };
+
+  const presaleAddress = "0x462eed0076dc1b2fe9deea0857df6d1953fe7d46"
+  const {address, isConnected} = useAccount()
+  const [referralLink, setReferralLink] = useState("https://vorn.ai?referral")
+  const [referralStats] = useState(
+      {
+          referrals: 0,
+          bonus: "0.00"
+      }
+  );
+  // use abi
+  const { data: getReferralsInfo } = useReadContract({
+      abi: presaleAbi.abi,
+      address: presaleAddress,
+      functionName: 'getReferrals',
+      args:[address],
+    })
+  
+    const { data: getTotalReferralEarnInfo } = useReadContract({
+      abi: presaleAbi.abi,
+      address: presaleAddress,
+      functionName: 'getTotalReferralEarnings',
+      args:[address],
+    })
+
+    // use useEffect
+    useEffect(()=>{
+      if(typeof window !== 'undefined' && isConnected){
+          const protocol = window.location.protocol;
+          const hostname = window.location.hostname;
+          let url = protocol+hostname;
+          if(hostname==='localhost') url = protocol+hostname+':3000'
+          setReferralLink(url+'?referral='+address)
+      }
+    }, [isConnected, address, getTotalReferralEarnInfo, getReferralsInfo, referralStats])
+  
 
   return (
     <div className="mt-[20px] border border-[#440675] bg-[#0B0015] rounded-[12px] px-[10px] py-[15px] lg:p-[20px] text-white">

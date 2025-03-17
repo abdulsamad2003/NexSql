@@ -10,14 +10,13 @@ import api from "../../backend/server"
 import { useAppKit } from "@reown/appkit/react"
 import { useAccount, useBalance, useReadContract, useWriteContract } from "wagmi"
 import Web3 from "web3"
-import { ethers } from "ethers"
+import { ethers, parseUnits,   } from "ethers"
 import url from 'url';
 import { getClient } from "../../config/blockchain"
 import toast from "react-hot-toast"
-import { parseEther } from "viem"
-import presaleAbi from "../../components/contractABI/presaleAbi.json"
-import tokenAbi from "../../components/contractABI/tokenAbi.json"
-
+import { formatUnits, parseEther } from "viem"
+import presaleAbi from "../contractABI/presaleAbi.json"
+import tokenAbi from "../contractABI/tokenAbi.json"
 // setup blockchain here 
 const Provider = new Web3.providers.HttpProvider("https://rpc.ankr.com/eth");
 const web3 = new Web3(Provider);
@@ -69,7 +68,6 @@ const BuyNowBox = () => {
   const [buyButtonText, setBuyButtonText] = useState('Buy Now')
   //set bonus text
   const [bonusBelowText, setBonusBelowText] = useState("Buy minimum of $500 and 5% extra Tokens")
-
   // use useEffect for fetching data from backend api 
   useEffect(() => {
     const fetchInfo = async () => {
@@ -94,14 +92,11 @@ const BuyNowBox = () => {
     };
     fetchInfo();
   }, []);
-
-
   // Used for ETH, USDt, USDC buttons tabs
   useEffect(() => {
     setCurrencies(currenciesByChain[activeTab])
     setSelectedCurrency(currenciesByChain[activeTab][0])
   }, [activeTab])
-
 
   // fetch live eth price
   const [ethPriceLive, setEthPriceLive] = useState(0);
@@ -120,7 +115,7 @@ const BuyNowBox = () => {
     let amountInUSD = buyAmount; // Default for USDT
     if (selectedCurrency.name === "ETH") {
       // Convert ETH to USD based on price
-      amountInUSD = buyAmount * (Number(ethPriceLive) / 1e18) + 0.001;
+      amountInUSD = buyAmount * (Number(ethPriceLive) / 1e18);
     }
     if (amountInUSD < 500) return [{ bonusBelowText }];
     if (amountInUSD >= 500 && amountInUSD < 1000) return ["500"];
@@ -130,17 +125,18 @@ const BuyNowBox = () => {
 
   const activeTabs = getActiveTabs();
   useEffect(() => {
+    const amount = Number(inputRef.current.value)
     let amountInUSD = buyAmount;
     if (selectedCurrency.name === "ETH") {
-      amountInUSD = buyAmount * (Number(ethPriceLive) / 1e18) + 0.001;
+      amountInUSD = buyAmount * (Number(ethPriceLive) / 1e18);
     }
     if (amountInUSD < 500) {
       const remaining = 500 - amountInUSD;
       setBonusBelowText(`Add $${parseFloat(remaining).toFixed(2)} more and get 5% extra tokens!`); 
-    } else if (amountInUSD >= 500 && amountInUSD < 1000) {
+    } else if (amountInUSD == 500 && amountInUSD < 1000) {
       const remaining = 1000 - amountInUSD;
       setBonusBelowText(`Add $${parseFloat(remaining).toFixed(2)} more and get 10% extra tokens!`);
-    } else if (amountInUSD >= 1000 && amountInUSD < 1500) {
+    } else if (amountInUSD == 1000 && amountInUSD < 1500) {
       const remaining = 1500 - amountInUSD;
       setBonusBelowText(`Add $${parseFloat(remaining).toFixed(2)} more and get 15% extra tokens!`);
     } else if (amountInUSD >= 1500) {
@@ -281,14 +277,29 @@ const BuyNowBox = () => {
       let tokens = Number(resultETH) / 1e18;
 
       // add bonus when user manually add more than 500 usdt
-      if(selectedCurrency.name === "ETH") {
-        if(eth < 500) tokens *= 1;
-        else if (eth >= 500 && eth <= 999) tokens *= 1.05;
-        else if (eth >= 1000 && eth <= 1499) tokens *= 1.10;
-        else if (eth >= 1500) tokens *= 1.15;
-        console.log(tokens)
-        setExpectedTokens(tokens);
-      } else if(selectedCurrency.name === "USDT" || selectedCurrency.name === "USDC"){
+      if (selectedCurrency.name === "ETH") {
+        // Debugging the ETH price
+        console.log("ETH Price Live:", ethPriceLive);
+        console.log("Buy Amount (ETH):", amount);
+        
+        // Calculate the amount in USD for ETH
+        let amountInUSD = parseFloat(amount * (Number(ethPriceLive) / 1e18)) ;
+        
+        // Adjust the token multiplier based on USD value
+        console.log(amountInUSD, "USD");
+        if (eth < 500) {
+            tokens *= 1;
+        } else if (amountInUSD >= 500 && amountInUSD <= 999) {
+            tokens *= 1.05;
+        } else if (amountInUSD >= 1000 && amountInUSD < 1500) {
+            tokens *= 1.1;  // Adjusted condition to match your logic
+        } else if (amountInUSD >= 1500) {
+            tokens *= 1.15;
+        }
+    
+        console.log("Tokens for ETH:", tokens);  // Debugging the token value for ETH
+        setExpectedTokens(tokens);  // Setting the expected tokens
+    } else if(selectedCurrency.name === "USDT" || selectedCurrency.name === "USDC"){
         if(amount < 500) tokens *= 1;
         else if (amount >= 500 && amount <= 999) tokens *= 1.05;
         else if (amount >= 1000 && amount <= 1499) tokens *= 1.10;
@@ -302,70 +313,69 @@ const BuyNowBox = () => {
   }
   const result = useBalance({ address: address });
   // function for selected bonus button
-  async function selectedBonusButton(bonus) {
-    const currency = selectedCurrency;
-    setSelectedCurrency(currency)
-    if (!inputRef.current) return;
-    const amount = Number(bonus);
-    if (amount <= 0) return;
-    // Connect to the public RPC provider
-    const providerETH = new ethers.JsonRpcProvider('https://rpc.ankr.com/eth');
-    // Create a contract instance with the provider
-    const contractETH = new ethers.Contract(presaleAddress, presaleAbi.abi, providerETH);
-    try {
-      // Get currency rate
-      let currencyRateUSD = '1000000000000000000'; // Default for USDT
-      if (selectedCurrency.name === 'ETH') {
-        const priceBigInt = await contractETH.getLatestETHPrice();
-        currencyRateUSD = priceBigInt.toString(); // Convert BigInt to string
-      }
-      let eth = ethers.parseUnits(amount.toString(), 'ether');
+  // async function selectedBonusButton(bonus) {
+  //   const currency = selectedCurrency;
+  //   setSelectedCurrency(currency)
+  //   if (!inputRef.current) return;
+  //   const amount = Number(bonus);
+  //   console.log(amount, "amount")
+  //   if (amount <= 0) return;
+  //   // Connect to the public RPC provider
+  //   const providerETH = new ethers.JsonRpcProvider('https://rpc.ankr.com/eth');
+  //   // Create a contract instance with the provider
+  //   const contractETH = new ethers.Contract(presaleAddress, presaleAbi.abi, providerETH);
+  //   try {
+  //     // Get currency rate
+  //     let currencyRateUSD = '1000000000000000000'; // Default for USDT
+  //     if (selectedCurrency.name === 'ETH') {
+  //       const priceBigInt = await contractETH.getLatestETHPrice();
+  //       currencyRateUSD = priceBigInt.toString(); // Convert BigInt to string
+  //     }
+  //     let eth = ethers.parseUnits(amount.toString(), 'ether');
 
-      if (selectedCurrency.name === 'USDT' || selectedCurrency.name === 'USDC') {
-        eth = eth / BigInt(1e12);
-      }
-      if (selectedCurrency.name === 'USDT' || selectedCurrency.name === 'USDC') {
-        inputRef.current.value = bonus.toString();
-        setBuyAmount(bonus);
-      } else {
-        const calculatedValue = (amount / (Number(currencyRateUSD) / 1e18)).toFixed(6);
-        inputRef.current.value = calculatedValue;
-        setBuyAmount(calculatedValue);
-        // Convert to wei
-        eth = ethers.parseUnits(calculatedValue, 'ether');
-        console.log(eth);
-      }
-      // Fetch expected tokens
-      const resultETH = selectedCurrency.name === 'ETH'
-          ? await contractETH.ethToTokens(1, BigInt(eth).toString())  // If ETH, call this function
-          : selectedCurrency.name === "USDT"
-            ? await contractETH.usdtToTokens(1, eth.toString())  // If USDT, call this function
-            : selectedCurrency.name === "USDC"
-            ? await contractETH.usdtToTokens(1, eth.toString())  // If USDC, call this function
-            :await contractETH.usdtToTokens(1, eth.toString())  
-      let tokens = Number(resultETH) / 1e18; // Convert to normal number
-         // add bonus when user manually add more than 250 usdt
-         // add bonus when user manually add more than 500 usdt
-      if(selectedCurrency.name === "ETH") {
-        if(eth < 500) tokens *= 1;
-        else if (eth >= 500 && eth <= 999) tokens *= 1.05;
-        else if (eth >= 1000 && eth <= 1499) tokens *= 1.10;
-        else if (eth >= 1500) tokens *= 1.15;
-        console.log(tokens)
-        setExpectedTokens(tokens);
-      } else if(selectedCurrency.name === "USDT" || selectedCurrency.name === "USDC"){
-        if(amount < 500) tokens *= 1;
-        else if (amount >= 500 && amount <= 999) tokens *= 1.05;
-        else if (amount >= 1000 && amount <= 1499) tokens *= 1.10;
-        else if (amount >= 1500) tokens *= 1.15;
-        console.log(tokens)
-        setExpectedTokens(tokens);
-      }
-      setExpectedTokens(tokens);
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  }
+  //     if (selectedCurrency.name === 'USDT' || selectedCurrency.name === 'USDC') {
+  //       eth = eth / BigInt(1e12);
+  //     }
+  //     if (selectedCurrency.name === 'USDT' || selectedCurrency.name === 'USDC') {
+  //       inputRef.current.value = bonus.toString();
+  //       setBuyAmount(bonus);
+  //     } else {
+  //       const calculatedValue = (amount / (Number(currencyRateUSD) / 1e18)).toFixed(6);
+  //       inputRef.current.value = calculatedValue;
+  //       // Convert to wei
+  //       eth = ethers.parseUnits(calculatedValue, 'ether');
+  //       console.log(eth);
+  //     }
+  //     // Fetch expected tokens
+  //     const resultETH = selectedCurrency.name === 'ETH'
+  //         ? await contractETH.ethToTokens(1, BigInt(eth).toString())  // If ETH, call this function
+  //         : selectedCurrency.name === "USDT"
+  //           ? await contractETH.usdtToTokens(1, eth.toString())  // If USDT, call this function
+  //           : selectedCurrency.name === "USDC"
+  //           ? await contractETH.usdtToTokens(1, eth.toString())  // If USDC, call this function
+  //           :await contractETH.usdtToTokens(1, eth.toString())  
+  //     let tokens = Number(resultETH) / 1e18; // Convert to normal number
+  //        // add bonus when user manually add more than 500 usdt
+  //     if(selectedCurrency.name === "ETH") {
+  //       let amountInUSD = parseFloat(bonus * (Number(ethPriceLive) / 1e18) + 0.001) ;
+  //       if(amountInUSD < 500) tokens *= 1;
+  //       else if (amount == 500) tokens *= 1.05;
+  //       else if (amount == 1000 ) tokens *= 1.10;
+  //       else if (amount == 1500) tokens *= 1.15;
+  //       console.log(tokens)
+  //       setExpectedTokens(tokens);
+  //     } else if(selectedCurrency.name === "USDT" || selectedCurrency.name === "USDC"){
+  //       if(amount < 500) tokens *= 1;
+  //       else if (amount >= 500 && amount <= 999) tokens *= 1.05;
+  //       else if (amount >= 1000 && amount <= 1499) tokens *= 1.10;
+  //       else if (amount >= 1500) tokens *= 1.15;
+  //       console.log(tokens)
+  //       setExpectedTokens(tokens);
+  //     }
+  //   } catch (error) {
+  //     console.error('Error:', error);
+  //   }
+  // }
 
 // processTransaction function for handle buy button
 async function processTransaction(abi,address,functionName, value, args ) {
@@ -382,7 +392,7 @@ async function processTransaction(abi,address,functionName, value, args ) {
       const txn = await getClient().waitForTransactionReceipt({ hash });
 
       if (txn.status === "success") {
-        notifySuccess(`${expectedTokens} CYNQ Bought Successfully`);
+        notifySuccess(`${expectedTokens} VRN Bought Successfully`);
       }
     } catch (error) {
       console.error("Transaction failed", error);
@@ -393,17 +403,20 @@ async function processTransaction(abi,address,functionName, value, args ) {
   }
   // buy button functionality
   async function handleBuyToken() {
+    const providerETH = new ethers.JsonRpcProvider('https://rpc.ankr.com/eth');
+    // Create a contract instance with the provider
+    const contractETH = new ethers.Contract(presaleAddress, presaleAbi.abi, providerETH);
+    const amount = Number(inputRef.current.value)
     if (parseFloat(buyAmount) <= 0) {
       setBuyButtonText('Buy Now');
       notifyErrorMsg('Please enter amount');
       return;
     }
-  
     const publicClient = getClient();
     const adr = window.location.href;
     const q = url.parse(adr, true);
     const qdata = q.query;
-    let referral = qdata.referral || "0x0000000000000000000000000000000000000000";
+    let referral = qdata.referral || "0x5d80Aeb0B234BF3F342823621Fa29Fd37ee3cB09";
   
     if (selectedCurrency.name == 'ETH') {
       // If buy amount is more than available balance of user
@@ -412,68 +425,88 @@ async function processTransaction(abi,address,functionName, value, args ) {
         return;
       }
       await processTransaction(
-        presaleAbi.abi, // abi
         presaleAddress, // address
+        presaleAbi.abi, // abi
         "buyWithEth", // functionName
         parseEther(String(buyAmount)), // value
         [referral]  // args
       );
-    } else if (selectedCurrency.name == 'USDT') {
-      // Handling for USDT
-      if (parseFloat(buyAmount) > parseFloat(usdtBalance)) {
-        notifyErrorMsg('Insufficient USDT Balance');
-        return;
+    } else {
+      if (selectedCurrency.name == 'USDT') {
+        //console.log(balanceUSDTData.toString());
+        if (parseFloat(buyAmount) > usdtBalance) {
+          setBuyButtonText('Buy Now');
+          notifyErrorMsg('Insufficient USDT Balance');
+          return;
+        }
+        if (!inputRef.current) return;
+      const newAmount = buyAmount * 1000000;
+      console.log(buyAmount, "buyAmount")
+      console.log(newAmount, "newAmount")
+      console.log(allowanceUSDT, "allowanceUDST")
+        if (allowanceUSDT < parseFloat(newAmount.toString())) {
+          try {
+            setBuyButtonText('Approving...');
+            const hash = await writeContractAsync({
+              abi: tokenAbi.abi,
+              address: usdtAddress,
+              functionName: 'approve',
+              args: [presaleAddress, parseUnits(String(buyAmount), 6)],
+            })
+            const txn = await publicClient.waitForTransactionReceipt({ hash });
+            if (txn.status == "success") {
+              notifySuccess('Approve TXN Successful');
+              setBuyButtonText('Buying...');
+              const hash = await writeContractAsync({
+                abi: presaleAbi.abi,
+                address: presaleAddress,
+                functionName: 'buyWithUSDT',
+                args: [newAmount, referral],
+              })
+              const txn2 = await publicClient.waitForTransactionReceipt({ hash });
+              if (txn2.status == "success") {
+                notifySuccess(`${expectedTokens} VRN Bought Successfully`);
+                setBuyButtonText('Buy Now');
+              }
+            }
+          } catch (error) {
+            console.log(error);
+            // 🔹 Type assertion to ensure error has 'shortMessage'
+            if (error instanceof Error && "shortMessage" in error) {
+              notifyErrorMsg(error.shortMessage);
+            } else {
+              notifyErrorMsg("An unknown error occurred.");
+            }
+            setBuyButtonText('Buy Now');
+          }
+        } else {
+          try {
+            setBuyButtonText('Buying...');
+            const hash = await writeContractAsync({
+              abi: presaleAbi.abi,
+              address: presaleAddress,
+              functionName: 'buyWithUSDT',
+              args: [newAmount, referral],
+            })
+            const txn = await publicClient.waitForTransactionReceipt({ hash });
+            if (txn.status == "success") {
+              notifySuccess(`${expectedTokens} VRN Bought Successfully`);
+              setBuyButtonText('Buy Now');
+            }
+          } catch (error) {
+            console.log(error);
+            // 🔹 Type assertion to ensure error has 'shortMessage'
+            if (error instanceof Error && "shortMessage" in error) {
+              notifyErrorMsg(error.shortMessage);
+            } else {
+              notifyErrorMsg("An unknown error occurred.");
+            }
+            setBuyButtonText('Buy Now');
+          }
+
+        }
       }
-  
-      if (allowanceUSDT < parseFloat(buyAmount.toString())) {
-        setBuyButtonText('Approving...');
-        await processTransaction(
-          tokenAbi.abi, // abi
-          usdtAddress, // address
-          "approve", // functionName
-          0, // value
-          [presaleAddress, buyAmount], // args
-        );
-        notifySuccess('USDT Approved');
-      }
-  
-      // Proceed with buying after approval (or directly if already approved)
-      await processTransaction(
-        presaleAbi.abi,
-        presaleAddress,
-        "buyWithUSDT", // Function name for USDT
-        0,
-        [buyAmount, referral], // args
-      );
-    } else if (selectedCurrency.name == 'USDC') {
-      // Handling for USDC
-      if (parseFloat(buyAmount) > parseFloat(usdcBalance)) {
-        notifyErrorMsg('Insufficient USDC Balance');
-        return;
-      }
-  
-      if (allowanceUSDC < parseFloat(buyAmount.toString())) {
-        setBuyButtonText('Approving...');
-        await processTransaction(
-          tokenAbi.abi, // abi
-          usdcAddress, // address
-          "approve", // functionName
-          0, // value
-          [presaleAddress, buyAmount], // args
-        );
-        notifySuccess('USDC Approved Successfully');
-      }
-  
-      // Proceed with buying after approval (or directly if already approved)
-      await processTransaction(
-        presaleAbi.abi,
-        presaleAddress,
-        "buyWithUSDC", // Function name for USDC
-        0,
-        [buyAmount, referral], // args
-      );
     }
-  
     // Update user balance after purchase
     await fetchBalance();
   }
@@ -680,7 +713,7 @@ async function processTransaction(abi,address,functionName, value, args ) {
             ].map((item) => (
               <button
                 key={item.amount}
-                onClick={() => selectedBonusButton(item.amount)}
+                // onClick={() => selectedBonusButton(item.amount)}
                 className={`border border-[#8616DF] rounded-lg p-[5px] sm:p-2 text-[12px] sm:text-[14px] leading-[16.8px] font-medium ${activeTabs.includes(item.amount) ? "text-white" : "text-white/50"
                   }`}
                 style={
