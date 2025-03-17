@@ -3,7 +3,6 @@ import { Copy, DollarSign, Sun } from 'lucide-react'
 import Web3 from 'web3'
 import { useAccount, useReadContract } from 'wagmi'
 import presaleAbi from "../../components/contractABI/presaleAbi.json"
-
 // load bloackchain
 const Provider = new Web3.providers.HttpProvider("https://bsc-dataseed.binance.org/")
 const web3 = new Web3(Provider)

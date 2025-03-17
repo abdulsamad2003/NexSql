@@ -71,13 +71,10 @@ const StakingSection = () => {
       const selectedOption = stakingOptions[selectedPeriodIndex];
       const aprPercentage =
         parseFloat(selectedOption.apr.replace("%", "")) / 100;
-        
         const profit = (numericStakeAmount * aprPercentage) 
         setEstimatedProfit(profit);
         setTotalAmount(numericStakeAmount + profit);
-        
-        
-      const periodDays = parseInt(selectedOption.period.split(" ")[0]);
+        const periodDays = parseInt(selectedOption.period.split(" ")[0]);
       
       const currentDate = new Date();
       currentDate.setMonth(currentDate.getDate() + periodDays);
@@ -150,7 +147,6 @@ const StakingSection = () => {
       textColor: "text-[#C176FF]",
     },
   ];
-
   // Map periods to days
   const weekDays = {
     "3M": 90,
@@ -163,7 +159,7 @@ const StakingSection = () => {
     setSelectedPeriodIndex(index);
 
     const selectedOption = stakingOptions[index].option;
-    setDays(weekDays[stakingOptions] || 0);
+    setDays(weekDays[selectedOption] || 0);
   };
 
     // web3 related functionality
@@ -221,7 +217,6 @@ const StakingSection = () => {
     address: stakeAddress,
     functionName: 'rewardRate12Months',
   })
-
 async function handleStakeToken(){
   console.log("token:", tokenBalance)
     if(numericStakeAmount >  tokenBalance) {
@@ -289,7 +284,7 @@ async function handleStakeToken(){
         })
         const txn = await publicClient.waitForTransactionReceipt( { hash } );
         if(txn.status === "success") {
-          notifySuccess('Staked `'+stakeAmount+'`CYNQ Successfully')
+          notifySuccess('Staked `'+stakeAmount+'`VRN Successfully')
           setStakeButtonText("Stake Now")
         }
       }catch(error){
@@ -304,7 +299,6 @@ async function handleStakeToken(){
     }
 
   }
-
   async function handleWithdraw(index)  {
     const publicClient = getClient();
         try {
@@ -400,7 +394,6 @@ async function handleStakeToken(){
           $('#'+index).attr("disabled", 'false');
           $('#'+index).html(t('restake'));
     }
-
   }else{
     try {
 
