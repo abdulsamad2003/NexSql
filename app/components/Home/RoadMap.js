@@ -1,5 +1,6 @@
 import SectionHeading from "../SectionHeading";
 import { useTranslation } from "react-i18next";
+import Image from 'next/image';
 
 export default function RoadMap() {
   const { t } = useTranslation();
@@ -35,15 +36,19 @@ export default function RoadMap() {
       id="roadmap"
       className="bg-black px-4 md:px-5 py-24 relative overflow-hidden"
     >
-      <img
+      <Image
         src="/assets/roadmap-bg.svg"
         alt="bg-graphic"
         className="absolute bottom-0 left-0 w-full object-cover  md:block hidden"
+        width={1920}
+        height={1080}
       />
-      <img
+      <Image
         src="/assets/roadmap-bg-mobile.png"
         alt="bg-graphic"
         className="absolute bottom-0 left-0 w-full object-cover block md:hidden"
+        width={640}
+        height={360}
       />
       <SectionHeading text={t("home.roadMap.subTitle")} />
       <h1 className="my-[25px] text-[32px] md:text-[40px] leading-[44px] font-bold text-white text-center">

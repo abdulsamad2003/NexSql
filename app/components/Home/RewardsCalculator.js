@@ -1,6 +1,7 @@
 import SectionHeading from "../SectionHeading";
 import Button from "../Button";
 import { useTranslation } from "react-i18next";
+import Image from 'next/image';
 
 export default function RewardsCalculator() {
   const { t } = useTranslation();
@@ -25,10 +26,11 @@ export default function RewardsCalculator() {
 
   return (
     <div className="  bg-black px-4 md:px-5 py-24 relative overflow-hidden">
-      <img
+      <Image
         src="/assets/graphic.svg"
         alt="graphic" 
         className="absolute bottom-0 left-0 w-full"
+        layout="fill"
       />
       <SectionHeading text={t("")} />
       <h1 className="px-3 my-[25px] text-[32px] md:text-[40px] leading-[44px] font-bold text-white text-center">

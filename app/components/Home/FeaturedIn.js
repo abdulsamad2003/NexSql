@@ -37,7 +37,7 @@ const FeaturedIn = () => {
             }}
           >
              {[...logos, ...logos, ...logos].map((logo, index) => (
-              <div className="text-white text-[24px] sm:text-[32px] font-bold leading-[26px] text-nowrap">
+              <div className="text-white text-[24px] sm:text-[32px] font-bold leading-[26px] text-nowrap" key={index}>
                 {logo}
               </div>  
             ))}

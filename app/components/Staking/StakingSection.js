@@ -92,7 +92,7 @@ const StakingSection = () => {
       setUnlockDate("");
     }
 
-  }, [numericStakeAmount, selectedPeriodIndex]);
+  }, [numericStakeAmount, selectedPeriodIndex, stakingOptions]);
     const getDate = (timestamp) => {
     const dateObj = new Date(timestamp * 1000);
     const utcString = dateObj.toUTCString();
@@ -468,7 +468,7 @@ async function handleStakeToken(){
           }
       }
     }
-  }, [isConnected, balanceTokenData,stakeData, rewardRate3MData, rewardRate6MData, rewardRate9MData, rewardRate12MData])
+  }, [isConnected, balanceTokenData,stakeData, rewardRate3MData, rewardRate6MData, rewardRate9MData, rewardRate12MData, stakingOptions, selectedPeriodIndex])
   return (
     <div className="mt-[20px] rounded-[12px] bg-[#0B0015] border border-[#440675] px-2.5 pb-5 pt-2.5 lg:p-[20px]">
       <h2 className="text-white text-[22px] leading-[28.8px] font-bold lg:text-left text-center">

@@ -22,7 +22,7 @@ const Chart3D = ({ data }) => {
 
     // Explicitly disable and hide the logo/watermark
     chart.logo.disabled = true;
-    chart.logo.opacity = 0; // Ensure it’s invisible
+    chart.logo.opacity = 0; // Ensure it's invisible
     chart.logo.height = 0; // Collapse its size
     chart.logo.width = 0;
 
@@ -84,7 +84,7 @@ const Chart3D = ({ data }) => {
     return () => {
       chart.dispose();
     };
-  }, []);
+  }, [data]);
 
   // Effect to monitor screen width and adjust font size
   useEffect(() => {
