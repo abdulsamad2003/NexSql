@@ -3,6 +3,7 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { useTranslation } from "react-i18next";
 import SectionHeading from "../components/SectionHeading";
+import Image from 'next/image';
 
 export default function About () {
   const { t } = useTranslation();
@@ -46,7 +47,7 @@ export default function About () {
             About Us
           </h1>
           <p className="max-w-[665px] mx-auto text-[18px] leading-[30px] font-normal font-poppins text-white mt-[25px]">
-          We're a team of SQL Server experts with decades of experience at Microsoft. We've helped dozens of teams scale securely and efficiently.
+          We&apos;re a team of SQL Server experts with decades of experience at Microsoft. We&apos;ve helped dozens of teams scale securely and efficiently.
           </p>
         </div>
       </div>
@@ -54,17 +55,19 @@ export default function About () {
 
 
       <div className="  bg-black px-4 md:px-5 py-24 relative overflow-hidden">
-      <img
+      <Image
         src="/assets/graphic.svg"
         alt="graphic" 
         className="absolute bottom-0 left-0 w-full"
+        width={1236}
+        height={150}
       />
       <SectionHeading text={"About Us"} />
       <h1 className="px-3 my-[25px] text-[32px] md:text-[40px] leading-[44px] font-bold text-white text-center">
-        We're a team of SQL Server experts with decades of experience at Microsoft. We've helped dozens of teams scale securely and efficiently.
+        We&apos;re a team of SQL Server experts with decades of experience at Microsoft. We&apos;ve helped dozens of teams scale securely and efficiently.
       </h1>
       <p className="px-2 text-center text-[18px] leading-[27px] font-normal font-poppins text-white/80 max-w-[653px] mx-auto">
-        We're a team of SQL Server experts with decades of experience at Microsoft. We've helped dozens of teams scale securely and efficiently.
+        We&apos;re a team of SQL Server experts with decades of experience at Microsoft. We&apos;ve helped dozens of teams scale securely and efficiently.
       </p>
 
       {/* Cards Section */}
