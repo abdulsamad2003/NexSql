@@ -6,21 +6,24 @@ import { useTranslation } from "react-i18next";
 const steps = [
   {
     title: "🔧 Real SQL Expertise",
-    description: "We've worked on SQL Server at Microsoft and helped dozens of teams scale securely and efficiently.",
+    description:
+      "We've worked on SQL Server at Microsoft and helped dozens of teams scale securely and efficiently.",
     image: "/assets/create-your-wallet.svg",
     alt: "real-sql-expertise",
     marginTop: "mt-0",
   },
   {
     title: "💡 Advisory + Hands-On",
-    description: "We don't just audit — we fix. From index optimization to high-availability strategies, we're your SQL co-pilot.",
+    description:
+      "We don't just audit — we fix. From index optimization to high-availability strategies, we're your SQL co-pilot.",
     image: "/assets/create-your-wallet.svg",
     alt: "advisory-hands-on",
     marginTop: "mt-20",
   },
   {
     title: "🤝 Long-Term Thinking",
-    description: "We aim to be your backend database team — not a one-off vendor. Our services are structured for relationships.",
+    description:
+      "We aim to be your backend database team — not a one-off vendor. Our services are structured for relationships.",
     image: "/assets/create-your-wallet.svg",
     alt: "long-term-thinking",
     marginTop: "mt-40",
@@ -40,11 +43,12 @@ const TrustNexaSql = () => {
       >
         <SectionHeading text={t("Why Companies Trust NexaSQL")} />
         <h1 className="my-[25px] text-[32px] sm:text-[40px] leading-[44px] font-bold text-white text-center">
-        Why Growing Businesses Rely on NexaSQL
+          Why Growing Businesses Rely on NexaSQL
         </h1>
-            <p className="text-center text-[18px] leading-[27px] font-normal font-poppins text-white/80">
-            We've worked on SQL Server at Microsoft and helped dozens of teams scale securely and efficiently.
-            </p>
+        <p className="text-center text-[18px] leading-[27px] font-normal font-poppins text-white/80">
+          We have worked on SQL Server at Microsoft and helped dozens of teams
+          scale securely and efficiently.
+        </p>
 
         {/* Steps Container */}
         <div className="mt-11 max-w-[1236px] w-full mx-auto grid grid-cols-1 md:grid-cols-2 lg:flex gap-5">
@@ -67,7 +71,7 @@ const TrustNexaSql = () => {
                 }}
               >
                 <h2 className="text-[24px] leading-[28.8px] font-semibold text-white mb-5">
-                {t(item.title)}
+                  {t(item.title)}
                 </h2>
                 <Image
                   src={item.image}
