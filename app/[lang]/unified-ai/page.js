@@ -42,18 +42,3 @@ const AIUtility = () => {
 };
 
 export default AIUtility;
-
-export function generateStaticParams() {
-  return [
-    { lang: "en" },
-    { lang: "de" },
-    { lang: "fr" },
-    { lang: "es" },
-    { lang: "ru" },
-    { lang: "bn" },
-    { lang: "hi" },
-    { lang: "it" },
-    { lang: "ja" },
-    { lang: "pt-BR" }
-  ];
-}
