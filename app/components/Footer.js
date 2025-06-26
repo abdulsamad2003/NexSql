@@ -38,7 +38,7 @@ const Footer = () => {
     if (typeof window !== 'undefined') {
       detectAndSetLanguage();
     }
-  }, []);
+  }, [currentLang]);
 
 
   // newsletter

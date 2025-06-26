@@ -47,7 +47,7 @@ export default function LocalizedButtonLink({
       i18n.changeLanguage(finalLang);
       localStorage.setItem("i18nextLng", finalLang); // Sync with i18nextLng
     }
-  }, [i18n]);
+  }, [i18n, currentLang]);
 
   const createLocalizedPath = (path) => {
     // Avoid double slashes and ensure proper path construction

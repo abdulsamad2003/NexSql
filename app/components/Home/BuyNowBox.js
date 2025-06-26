@@ -196,7 +196,7 @@ const BuyNowBox = () => {
     } else if (amountInUSD >= 1500) {
       setBonusBelowText(`congrats you get 15% extra tokens!`);
     }
-  }, [buyAmount, selectedCurrency]);
+  }, [buyAmount, selectedCurrency, ethPriceLive]);
 
   // token balance of user who connected for stackable
   const [stackableTokenBalance, setStackableTokenBalance] = useState(0);
@@ -507,7 +507,7 @@ const BuyNowBox = () => {
         setStackableTokenBalance(stackableBalance);
       }
     }
-  }, [isConnected, address, balanceUSDTData, totalAmountInfo, allowanceUSDTData, result, balanceTokenData],)
+  }, [isConnected, address, balanceUSDTData, totalAmountInfo, allowanceUSDTData, result, balanceTokenData, allowanceUSDCData, balanceUSDCData],)
 
 
   // Add a new state for the modal

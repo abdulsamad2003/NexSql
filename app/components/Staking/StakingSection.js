@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import styles from "../../styling/StakingButton.module.css";
 import { useAppKit } from "@reown/appkit/react";
@@ -216,237 +216,28 @@ const StakingSection = () => {
     address: stakeAddress,
     functionName: 'rewardRate12Months',
   })
-async function handleStakeToken(){
-  console.log("token:", tokenBalance)
-    if(numericStakeAmount >  tokenBalance) {
-      notifyErrorMsg("Insufficient Token Balance") 
-      return;
-    }
-    if(numericStakeAmount <=  0) {
-      notifyErrorMsg("please enter amount") 
-      setStakeButtonText("Stake Now")
-      return;
-    }
 
-    const publicClient = getClient()
-    if(!publicClient) {
-      notifyErrorMsg("Please connect to wallet")
-      return;
-    }
+  // Wrap stakingOptions initialization in useMemo and use stakingOptions as a dependency in useEffect.
+  const memoizedStakingOptions = useMemo(() => stakingOptions, []);
 
-    if(allowance < stakeAmount) {
-      try{
-        setStakeButtonText("Approving...")
-
-        const hash = await writeContractAsync({
-          abi: tokenAbi.abi,
-          address: tokenAddress,
-          functionName: 'approve',
-          args: [stakeAddress, parseEther(stakeAmount.toString())]
-        })
-      const txn = await publicClient.waitForTransactionReceipt( { hash } );
-
-      if(txn.status === "success") {
-        notifySuccess("Token Approved Successfully")
-        setStakeButtonText("Staking...")
-        const hash = await writeContractAsync({
-          abi: stakingAbi.abi,
-          address: stakeAddress,
-          functionName: 'stakeVRN',
-          args: [stakeAmount.toString(), days*86400]
-        })
-        const txn2 = await publicClient.waitForTransactionReceipt( { hash } );
-        if(txn2.status === "success") {
-          notifySuccess('Staked `'+stakeAmount+'` VRN Successfully')
-          setStakeButtonText("Stake Now")
-        } else {
-          notifyErrorMsg("Error in staking after approved")
-          console.log("erre",error);
-          setStakeButtonText("Stake Now")
-        }
-      }
-    }
-    catch(error){
-      notifyErrorMsg("Error in staking", error)
-      console.log("erre",error);
-      setStakeButtonText("Stake Now")
-    }
-  }
-  else{
-      try{
-        setStakeButtonText("Staking...")
-        const hash = await writeContractAsync({
-          abi: stakingAbi.abi,
-          address: stakeAddress,
-          functionName: 'stakeVRN',
-          args: [stakeAmount.toString(),days*86400]
-        })
-        const txn = await publicClient.waitForTransactionReceipt( { hash } );
-        if(txn.status === "success") {
-          notifySuccess('Staked `'+stakeAmount+'`VRN Successfully')
-          setStakeButtonText("Stake Now")
-        }
-      }catch(error){
-        console.log("erre",error);
-        setStakeButtonText("Stake ")
-        if (error instanceof Error && "shortMessage" in error) {
-          notifyErrorMsg(error.shortMessage);
-        } else {
-            notifyErrorMsg("An unknown error occurred.");
-        };
-      }
-    }
-
-  }
-  async function handleWithdraw(index)  {
-    const publicClient = getClient();
-        try {
-          $('#'+index).attr("disabled", 'true');
-          $('#'+index).html(t('staking.stakingHistory.withdrawing'));
-    
-          const hash = await  writeContractAsync({ 
-            abi: stakingAbi.abi,
-            address: stakeAddress,
-            functionName: 'withdraw',
-            args:[index],
-          })
-    
-          const txn = await publicClient.waitForTransactionReceipt( { hash } );
-              
-          if(txn.status == "success"){
-            
-            notifySuccess('Withdraw TXN Successful'); 
-            $('#'+index).attr("disabled", 'false');
-            $('#'+index).html(t('staking.stakingHistory.reStake')); 
-
-            const withdrawnAmount = ethers.formatUnits(stakeData[index].amount.toString(), 'ether');
-            // Subtract the withdrawn stake amount from myStakeAmount
-           console.log(withdrawnAmount)
-           setMyStakeAmount((prevStakeAmount) => {
-            const newAmount = prevStakeAmount - Number(withdrawnAmount);
-            return newAmount.toString();
-          });
-          }
-        }catch(error){
-              console.log(error);
-               // 🔹 Type assertion to ensure error has 'shortMessage'
-              if (error instanceof Error && "shortMessage" in error) {
-                notifyErrorMsg(error.shortMessage);
-              } else {
-                  notifyErrorMsg("An unknown error occurred.");
-              }
-              $('#'+index).attr("disabled", 'false');
-              $('#'+index).html(t('staking.stakingHistory.withdraw')); 
-        }
-  }
-
-
- async function handleRestake(index, amount, lockDuration){
-  const publicClient = getClient();
-  if(Number(amount) > Number(web3.utils.toWei(Number(tokenBalance), 'ether'))){
-    notifyErrorMsg('Not enough token balance');
-     return;
-  }
-
-  if(allowance < parseFloat(amount.toString())) {
-    try {
-
-      $('#'+index).attr("disabled", 'false');
-      $('#'+index).html('Approving...'); 
-
-      const hash = await  writeContractAsync({ 
-        abi: tokenAbi.abi,
-        address: tokenAddress,
-        functionName: 'approve',
-        args:[stakeAddress, amount.toString()],
-      })
-
-      const txn = await publicClient.waitForTransactionReceipt( { hash } );
-      if(txn.status == "success"){
-        notifySuccess('Approve TXN Successful'); 
-        $('#'+index).attr("disabled", 'false');
-        $('#'+index).html(t('restaking')); 
-      
-          const hash = await  writeContractAsync({ 
-            abi: stakingAbi.abi,
-            address: stakeAddress,
-            functionName: 'stakeVRN',
-            args:[amount.toString(), Number(lockDuration) * 86400],
-          })
-
-          const txn2 = await publicClient.waitForTransactionReceipt( { hash } );
-          if(txn2.status == "success"){
-        
-            notifySuccess('Restaked Successfully');
-            $('#'+index).attr("disabled", 'false');
-            $('#'+index).html(t('withdraw')); 
-          }
-      }
-    }catch(error){
-          console.log(error);
-          // 🔹 Type assertion to ensure error has 'shortMessage'
-           if (error instanceof Error && "shortMessage" in error) {
-            notifyErrorMsg(error.shortMessage);
-          } else {
-              notifyErrorMsg("An unknown error occurred.");
-          }
-          $('#'+index).attr("disabled", 'false');
-          $('#'+index).html(t('restake'));
-    }
-  }else{
-    try {
-
-      $('#'+index).attr("disabled", 'true');
-      $('#'+index).html(t('restaking'));
-
-      const hash = await  writeContractAsync({ 
-        abi: stakingAbi.abi,
-        address: stakeAddress,
-        functionName: 'stakeVRN',
-        args:[amount.toString(), Number(lockDuration) * 86400],
-      })
-
-      const txn = await publicClient.waitForTransactionReceipt( { hash } );
-          
-      if(txn.status == "success"){
-        
-        notifySuccess('Restake TXN Successful'); 
-        $('#'+index).attr("disabled", 'false');
-        $('#'+index).html(t('withdrawn')); 
-      }
-    }catch(error){
-          console.log(error);
-          // 🔹 Type assertion to ensure error has 'shortMessage'
-           if (error instanceof Error && "shortMessage" in error) {
-            notifyErrorMsg(error.shortMessage);
-          } else {
-              notifyErrorMsg("An unknown error occurred.");
-          }
-          $('#'+index).attr("disabled", 'false');
-          $('#'+index).html(t('restake')); 
-    }
-  }
-}
-
-  
   useEffect(() => {
     if(rewardRate3MData){
-      const selectedOption = stakingOptions[selectedPeriodIndex];
+      const selectedOption = memoizedStakingOptions[selectedPeriodIndex];
       selectedOption.apr = rewardRate3MData.toString();
       console.log(selectedOption.apr)
     }
     if(rewardRate6MData){
-      const selectedOption = stakingOptions[selectedPeriodIndex];
+      const selectedOption = memoizedStakingOptions[selectedPeriodIndex];
       selectedOption.apr = rewardRate6MData.toString();
       console.log(selectedOption.apr)
     }
     if(rewardRate9MData){
-      const selectedOption = stakingOptions[selectedPeriodIndex];
+      const selectedOption = memoizedStakingOptions[selectedPeriodIndex];
       selectedOption.apr = rewardRate9MData.toString();
       console.log(selectedOption.apr)
     }
     if(rewardRate12MData){
-      const selectedOption = stakingOptions[selectedPeriodIndex];
+      const selectedOption = memoizedStakingOptions[selectedPeriodIndex];
       selectedOption.apr = rewardRate12MData.toString();
       console.log(selectedOption.apr)
     }
@@ -468,7 +259,7 @@ async function handleStakeToken(){
           }
       }
     }
-  }, [isConnected, balanceTokenData,stakeData, rewardRate3MData, rewardRate6MData, rewardRate9MData, rewardRate12MData, stakingOptions, selectedPeriodIndex])
+  }, [isConnected, balanceTokenData,stakeData, rewardRate3MData, rewardRate6MData, rewardRate9MData, rewardRate12MData, memoizedStakingOptions, selectedPeriodIndex])
   return (
     <div className="mt-[20px] rounded-[12px] bg-[#0B0015] border border-[#440675] px-2.5 pb-5 pt-2.5 lg:p-[20px]">
       <h2 className="text-white text-[22px] leading-[28.8px] font-bold lg:text-left text-center">
@@ -485,7 +276,7 @@ async function handleStakeToken(){
       </div>
 
       <div className="my-[15px] lg:my-[20px] grid grid-cols-2 lg:grid-cols-4 gap-2.5 md:gap-4 lg:gap-[20px]">
-        {stakingOptions.map((option, index) => {
+        {memoizedStakingOptions.map((option, index) => {
           const isSelected = index === selectedPeriodIndex;
           return (
             <div
@@ -629,7 +420,7 @@ async function handleStakeToken(){
                 {t("staking.stakingSection.duration")}
               </h2>
               <h2 className="text-[16px] sm:text-[18px] leading-[21.6px] font-normal">
-                {stakingOptions[selectedPeriodIndex].period}
+                {memoizedStakingOptions[selectedPeriodIndex].period}
               </h2>
             </div>
             <div className="flex items-center justify-between gap-4">
@@ -688,10 +479,10 @@ async function handleStakeToken(){
                               {(ethers.formatUnits(item.amount.toString(),'ether'))} VRN
                             </td>
                             <td className="text-white text-[0.75rem] px-[30px] py-[20px]">
-                              {stakingOptions[selectedPeriodIndex].period}
+                              {memoizedStakingOptions[selectedPeriodIndex].period}
                             </td>
                             <td className="text-white text-[0.75rem] px-[30px] py-[20px]">
-                                {stakingOptions[selectedPeriodIndex].apr}
+                                {memoizedStakingOptions[selectedPeriodIndex].apr}
                             </td>
                             <td className="text-white text-[0.75rem] px-[30px] py-[20px]">
                             { getDate(Number(item.startTime))}                            
