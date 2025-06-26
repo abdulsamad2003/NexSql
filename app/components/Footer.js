@@ -1,9 +1,10 @@
+"use client"
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useTranslation } from "react-i18next";
 import i18n from 'i18next';
-import LocalizedButtonLink from "./Button";
+
 
 const Footer = () => {
   const { t } = useTranslation();
@@ -103,90 +104,51 @@ const Footer = () => {
   const socialLinks = [
     {
       name: 'Twitter',
-      href: 'https://www.x.com/vornai',
+      href: '',
       icon: '/assets/icons/twitter.svg'
     },
     {
       name: 'Telegram',
-      href: 'https://t.me/vornai',
+      href: '',
       icon: '/assets/icons/telegram.svg'
     },
     {
       name: 'Medium',
-      href: 'https://medium.com/vornai',
+      href: '',
       icon: '/assets/icons/m.svg'
     },
     {
       name: 'Linktree',
-      href: 'https://linktree.com/vornai',
+      href: '',
       icon: '/assets/icons/tree.svg'
     }
   ];
 
   // Footer Links
   const footerLinks = [
-    {
-      category: 'product',
-      title: t("footer.product.title"),
-      links: [
-        {
-          name: t("footer.product.features"),
-          href: "#features"
-        },
-        {
-          name: t("footer.product.unifiedAI"),
-          href: "/unified-ai"
-        },
-        {
-          name: t("footer.product.depin"),
-          href: "/de-pin"
-        },
-        {
-          name: t("footer.product.rwa"),
-          href: "/rwa"
-        }
-      ]
-    },
+   
     {
       category: 'company',
-      title: t("footer.company.title"),
+      title: "Links",
       links: [
         {
-          name: t("footer.company.home"),
+          name: "Home ",
           href: "/"
         },
-        {
-          name: t("footer.company.roadmap"),
-          href: "#roadmap"
+        { 
+          name: "Services",
+          href: "/services"
         },
         {
-          name: t("footer.company.tokenomics"),
-          href: "#tokenomics"
+          name: "Pricing",
+          href: "/pricing"
         },
         {
-          name: t("footer.company.faqs"),
-          href: "#faqs"
+          name: "About",
+          href: "/about"
         }
       ]
     },
-    {
-      category: 'resources',
-      title: t("footer.resources.title"),
-      links: [
-        {
-          name: t("footer.resources.staking"),
-          href: "/staking"
-        },
-        {
-          name: t("footer.resources.whitepaper"),
-          href: "https://github.com"
-        },
-        {
-          name: t("footer.resources.cookiePolicy"),
-          href: "/cookie-policy"
-        }
-      ]
-    }
   ];
 
   // Localize the links
@@ -212,9 +174,9 @@ const Footer = () => {
         {/* Links */}
         <div className="pb-[50px] flex items-start justify-between lg:flex-row flex-col gap-[50px] lg:gap-5">
           <div>
-            <Image src="/assets/logo.svg" alt="logo" width={131} height={43} />
+            <h1 className="text-white text-[24px] leading-[32px] font-bold font-poppins">NexaSQL</h1>
             <p className="max-w-[373px] pt-5 pb-8 md:pb-10 text-[14px] text-white leading-[21px] font-normal font-poppins">
-              {t("footer.description")}
+            Reliable SQL Server Management & Optimization for Growing Businesses <br /> 24/7 Expert Support Tailored to Small and Mid-Sized Enterprises
             </p>
             <div className="flex items-center gap-[27px]">
               {socialLinks.map((social) => (
@@ -256,70 +218,14 @@ const Footer = () => {
           </div>
         </div>
 
-        {/* Newsletter */}
-        <div className="py-10 sm:py-[50px] border-t border-[#8B5CF6]/20">
-          <div className="flex items-center gap-6 sm:gap-4 justify-between flex-wrap">
-            <div>
-              <h2 className="text-white text-[16px] font-bold font-poppins mb-1">
-                {t("footer.newsletter.title")}
-              </h2>
-              <h3 className="text-white text-[14px] font-poppins">
-                {t("footer.newsletter.subtitle")}
-              </h3>
-            </div>
-            <div className="sm:w-fit w-full flex flex-col">
-              <div className="flex items-center gap-3">
-                <input
-                  type="text"
-                  placeholder={t("footer.newsletter.placeholder")}
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="text-white placeholder:text-white border border-[#8B5CF666] w-full sm:w-[400px] h-[45px] rounded-[12px] px-4 bg-transparent outline-none"
-                />
-                <button
-                  onClick={handleSubscribe}
-                  className="h-[45px] w-fit border border-[#CDA4FF] rounded-xl px-6 font-medium text-[15px] text-white"
-                  style={{ background: "radial-gradient(50.91% 97.54% at 50% 2.46%, #A052FF 0%, #440675 100%)", boxShadow: "0px 10px 39.3px #8400FF54" }}
-                >
-                  {t("footer.newsletter.subscribe")}
-                </button>
-              </div>
-
-              {alert.show && (
-                <div
-                  className={`mt-2 px-4 py-2 rounded-lg text-sm transition-all duration-300 ${alert.type === 'success'
-                    ? 'bg-[#1C3B1A] text-[#7CFF76] border border-[#7CFF76]'
-                    : 'bg-[#3B1A1A] text-[#FF7676] border border-[#FF7676]'
-                    }`}
-                >
-                  {alert.message}
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* Rights */}
-        <div className="flex items-start sm:items-center justify-between md:flex-row flex-col-reverse gap-4 border-t border-[#8B5CF6]/20 pt-10 sm:pt-[50px]">
+  
           <div className="flex items-center gap-[18px]">
-            <Link
-              href={createLocalizedPath("/privacy-policy")}
-              className="text-white font-poppins font-normal text-[14px]"
-            >
-              {t("footer.privacyPolicy")}
-            </Link>
-            <div className="bg-[#D9D9D9] w-1 h-1 rounded-full"></div>
-            <Link
-              href={createLocalizedPath("/terms")}
-              className="text-white font-poppins font-normal text-[14px]"
-            >
-              {t("footer.termsConditions")}
-            </Link>
-          </div>
+           
           <h3 className="text-white text-[14px] font-normal font-poppins">
-            {t("footer.rights")}
+          © 2025 NexaSQL — A brand of NXQL Technologies Pvt Ltd. All rights reserved.
           </h3>
-        </div>
+          </div>
+        
       </div>
     </div>
   );

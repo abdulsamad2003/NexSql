@@ -8,24 +8,24 @@ import Image from "next/image";
 
 const FAQData = [
   {
-    question: "home.faqs.question1",
-    answer: "home.faqs.answer1",
+    question: "What types of businesses can benefit from NexaSQL?",
+    answer: "NexaSQL is designed specifically for small and mid-sized businesses (SMBs) that rely on SQL Server for managing their data. Whether you run an e-commerce store, SaaS platform, logistics company, or a professional services firm, our support scales to fit your operational needs.",
   },
   {
-    question: "home.faqs.question2",
-    answer: "home.faqs.answer2",
+    question: "Do you only support Microsoft SQL Server, or other databases too?",
+    answer: "Our core expertise lies in Microsoft SQL Server, including all editions and deployments (on-premises and cloud). However, we also offer consulting for database migration and integration if you're using or moving to platforms like Azure SQL, PostgreSQL, or MySQL.",
   },
   {
-    question: "home.faqs.question3",
-    answer: "home.faqs.answer3",
+    question: "What if I don’t have an in-house IT team?",
+    answer: "No problem. NexaSQL is perfect for businesses without dedicated IT or database administrators. Our team acts as your remote DBAs, handling everything from setup, tuning, backups, to performance optimization — so you don’t have to hire internally.",
   },
   {
-    question: "home.faqs.question4",
-    answer: "home.faqs.answer4",
+    question: "How do I get started with NexaSQL?",
+    answer: "It's easy! Just reach out to us, and we'll schedule a consultation to discuss your specific needs. We'll provide a tailored quote based on your requirements, and you can start benefiting from our support right away.",
   },
   {
-    question: "home.faqs.question5",
-    answer: "home.faqs.answer5",
+    question: "Can you help us migrate or upgrade our SQL Server?",
+    answer: "Absolutely. We offer full support for SQL Server upgrades, version migrations, and platform transitions (like moving to Azure SQL). We handle schema design, data integrity checks, downtime planning, and post-migration testing to ensure a smooth transition.",
   },
 ];
 

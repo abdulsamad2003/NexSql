@@ -1,6 +1,6 @@
 import "./globals.css";
 import BottomTopArrow from './components/BottomTopArrow'
-import {Web3Provider} from '../app/hooks/WebProvider'
+// Removed: import {Web3Provider} from '../app/hooks/WebProvider'
 import { Toaster } from "react-hot-toast";
 export const metadata = {
   title: "VORN AI",
@@ -20,9 +20,8 @@ export default function RootLayout({ children }) {
                 draggable
                 pauseOnHover
                 theme="dark" />
-        <Web3Provider>
-           {children}
-        </Web3Provider>
+        {/* Removed Web3Provider wrapper */}
+        {children}
         <BottomTopArrow/>
       </body>
     </html>

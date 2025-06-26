@@ -57,7 +57,7 @@
     },
     "ourFeatures": {
       "title": "Our Features",
-      "description": "VORN AI is a self-sustaining, AI-driven ecosystem that integrates AI, DePIN, and RWA tokenization to create a fully autonomous decentralized economy.",
+      "description": "",
       "aiTitle": "AI - The Intelligent Brain",
       "aiDescription": "AI in VORN.AI serves as the intelligent core, optimizing resource allocation, automating smart contracts, and enhancing network security through real-time monitoring. It predicts demand for computing and energy resources, ensuring efficient distribution and maximum utilization. AI also manages yield optimization for staking pools and supports decentralized governance by streamlining proposal analysis and voting processes.",
       "depinTitle": "DePIN – The Physical Backbone",

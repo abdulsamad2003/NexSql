@@ -1,93 +1,9 @@
-"use client";
-import React, { useState, useEffect } from "react";
-import Image from "next/image";
+"use client"
+import React, { useState } from "react";
 import Link from "next/link";
-import LanguageDropdown from "./LanguageDropdown";
-import { useTranslation } from "react-i18next";
-import NavLink from "./NavLink";
-import MobileMenu from "./MobileMenu";
-import styles from "../styling/StakingButton.module.css"
-import { useAppKit } from "@reown/appkit/react";
-import { useAccount } from "wagmi";
-const Header = ({
-  extraClass = "h-[41px]",
-  paddingx = "px-[35px]",
-}) => {
-  // usestate for wallet connect and connected
-  const { open } = useAppKit();
-  const { isConnected } = useAccount();
-  const [isHovered, setIsHovered] = useState(false);
-  
-  const [currentLang, setCurrentLang] = useState("en");
-  const { i18n, t } = useTranslation();
+import styles from "../styling/StakingButton.module.css";
 
-  useEffect(() => {
-    const supportedLanguages = [
-      "en",
-      "pt-BR",
-      "ru",
-      "bn",
-      "de",
-      "es",
-      "fr",
-      "hi",
-      "it",
-      "ja",
-    ];
-
-    const normalizeLanguage = (lang) => {
-      if (lang === "pt" || lang === "br") return "pt-BR";
-      return supportedLanguages.includes(lang) ? lang : "en";
-    };
-
-    const storedLang =
-      localStorage.getItem("selectedLanguage") ||
-      localStorage.getItem("i18nextLng");
-    const langFromPath = window.location.pathname.split("/")[1];
-
-    const finalLang = normalizeLanguage(langFromPath || storedLang);
-
-    if (finalLang !== currentLang) {
-      console.log("Header: Setting language to", finalLang);
-      setCurrentLang(finalLang);
-      i18n.changeLanguage(finalLang);
-      localStorage.setItem("i18nextLng", finalLang);
-    }
-  }, [i18n]);
-
-  const createLocalizedPath = (path) => {
-    return `/${currentLang}${path}`.replace("//", "/");
-  };
-
-  const navLinks = [
-    { name: t("header.nav.home"), href: "/" },
-    {
-      name: t("header.nav.features"),
-      href: "#",
-      submenu: [
-        { name: t("header.nav.unifiedAI"), href: "/unified-ai" },
-        { name: t("header.nav.depin"), href: "/de-pin" },
-        { name: t("header.nav.rwa"), href: "/rwa" },
-      ],
-    },
-    { name: t("header.nav.roadmap"), href: "/#roadmap" },
-    { name: t("header.nav.tokenomics"), href: "/#tokenomics" },
-    { name: t("header.nav.whitepaper"), href: "/whitepaper" },
-    { name: t("header.nav.faqs"), href: "/#faqs" },
-  ];
-
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [mobileOpen, setMobileOpen] = useState(false);
-
-  const localizedNavLinks = navLinks.map((link) => ({
-    ...link,
-    href: createLocalizedPath(link.href),
-    submenu: link.submenu?.map((sub) => ({
-      ...sub,
-      href: createLocalizedPath(sub.href),
-    })),
-  }));
-
+const Header = () => {
   return (
     <div className="px-4">
       <div
@@ -97,67 +13,55 @@ const Header = ({
         }}
       >
         <div className="flex items-center justify-between w-full">
-          <Link href={createLocalizedPath("/")} className="cursor-pointer">
-            <Image
-              src="/assets/logo.svg"
-              alt="VORNA AI"
-              width={131}
-              height={43}
-            />
+          <Link href="/" className="cursor-pointer">
+            <h1 className="text-[24px] leading-[28.8px] font-bold text-white">NexaSQL</h1>
           </Link>
-
-          <ul className="hidden lg:flex items-center space-x-6 text-white">
-            {localizedNavLinks.map((link, idx) => (
-              <NavLink
-                key={idx}
-                link={link}
-                dropdownOpen={dropdownOpen}
-                setDropdownOpen={setDropdownOpen}
-              />
-            ))}
+          <ul className="hidden lg:flex items-center space-x-6 text-white mx-auto">
+            <li>
+              <Link href="/">
+                <span className="hover:text-[#9B59FF] cursor-pointer">Home</span>
+              </Link>
+            </li>
+            <li>
+              <Link href="/services">
+                <span className="hover:text-[#9B59FF] cursor-pointer">Services</span>
+              </Link>
+            </li>
+            <li>
+              <Link href="/pricing">
+                <span className="hover:text-[#9B59FF] cursor-pointer">Pricing</span>
+              </Link>
+            </li>
+            <li>
+              <Link href="/about">
+                <span className="hover:text-[#9B59FF] cursor-pointer">About</span>
+              </Link>
+            </li>
           </ul>
-
-          <div className="hidden lg:flex items-center space-x-4">
-            <LanguageDropdown />
-            {/* wallet connect button */}
-            <button
-              onClick={() =>
-                open(isConnected ? { view: "Account" } : undefined)
-              }
-              className={`${styles.stakingButton} ${extraClass} ${isHovered ? styles.hovered : ""}`}
-              onMouseEnter={() => setIsHovered(true)}
-              onMouseLeave={() => setIsHovered(false)}
-            >
-                  <div className={styles.gradientBorder} />
-                  <div className={`${styles.buttonContent} ${paddingx}`}>{t(isConnected ? "header.btnConnected" : "header.btn")}</div>
-                  <div className={styles.glowEffect} />
-            </button>
+          <div className="hidden lg:block">
+            <ContactButton />
           </div>
-
-          <button
-            className="lg:hidden text-white"
-            onClick={() => setMobileOpen(!mobileOpen)}
-          >
-            <Image
-              src="/assets/icons/mobile-menu.svg"
-              alt="mobile-menu"
-              width={50}
-              height={50}
-            />
-          </button>
         </div>
       </div>
-      {mobileOpen && (
-        <MobileMenu
-          mobileOpen={mobileOpen}
-          setMobileOpen={setMobileOpen}
-          navLinks={localizedNavLinks}
-          dropdownOpen={dropdownOpen}
-          setDropdownOpen={setDropdownOpen}
-          btnText={"header.btn"}
-        />
-      )}
     </div>
+  );
+};
+
+const ContactButton = () => {
+  const [isHovered, setIsHovered] = useState(false);
+  return (
+    <Link href="/contact">
+      <div
+        className={`${styles.stakingButton} h-[41px] ${isHovered ? styles.hovered : ""}`}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        style={{ minWidth: 120 }}
+      >
+        <div className={styles.gradientBorder} />
+        <div className={`${styles.buttonContent} px-[35px]`}>Contact</div>
+        <div className={styles.glowEffect} />
+      </div>
+    </Link>
   );
 };
 

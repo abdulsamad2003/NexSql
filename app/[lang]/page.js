@@ -1,4 +1,5 @@
 "use client";
+export const dynamic = "force-static";
 import React from "react";
 import { I18nextProvider } from "react-i18next";
 import i18n from "../../i18n";
@@ -6,12 +7,7 @@ import Header from "../components/Header";
 import useLanguage from "../hooks/useLanguage";
 import FeaturedIn from "../components/Home/FeaturedIn";
 import OurFeature from "../components/Home/OurFeatures";
-import BuiltOn from "../components/Home/BuiltOn";
-import BuyNRTX from "../components/Home/BuyNRTX";
-import EarnRewards from "../components/Home/EarnRewards";
-import RewardsCalculator from "../components/Home/RewardsCalculator";
-import RoadMap from "../components/Home/RoadMap";
-import Tokenomics from "../components/Home/Tokenomics";
+
 import FAQ from "../components/Home/FAQ";
 import Footer from "../components/Footer";
 import Hero from "../components/Home/Hero";
@@ -47,12 +43,10 @@ const Home = () => {
       </div>
       <FeaturedIn />
       <OurFeature />
-      <BuyNRTX />
-      <EarnRewards />
-      <RewardsCalculator />
-      <RoadMap />
+
+      {/* <RoadMap />
       <Tokenomics />
-      <BuiltOn />
+      <BuiltOn /> */}
       <FAQ />
       <Footer />
     </I18nextProvider>

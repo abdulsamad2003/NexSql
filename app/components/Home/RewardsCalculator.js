@@ -30,7 +30,7 @@ export default function RewardsCalculator() {
         alt="graphic" 
         className="absolute bottom-0 left-0 w-full"
       />
-      <SectionHeading text={t("home.rewardsCalculator.title.end")} />
+      <SectionHeading text={t("")} />
       <h1 className="px-3 my-[25px] text-[32px] md:text-[40px] leading-[44px] font-bold text-white text-center">
         {t("home.rewardsCalculator.title.start")}{" "}
         <span className="text-[#9442ED]">

@@ -5,53 +5,29 @@ export default function RoadMap() {
   const { t } = useTranslation();
   const phaseData = [
     {
-      quarter: t("home.roadMap.phases.0.quarter"),
-      title: t("home.roadMap.phases.0.title"),
+      quarter: "Starter Partnership Plan",
+      title: "$199/month",
       items: [
-        t("home.roadMap.items.marketResearch"),
-        t("home.roadMap.items.whitepaperRelease"),
-        t("home.roadMap.items.tokenomicsDesign"),
-        t("home.roadMap.items.technicalArchitecture"),
-        t("home.roadMap.items.communityBuilding"),
-        t("home.roadMap.items.earlyPartnerships"),
+        "Designed for businesses ready to get serious about their SQL Server stability and growth.",
+        "5 hours of dedicated SQL Server support",
+        "One free annual health check ($2500 value)",
+        "Onboarding call with a Microsoft-experienced DBA",
+        "Performance tuning, index fixes, slow query help",
+        "Cancel anytime — zero risk",
+        "Get Started"
       ],
     },
     {
-      quarter: t("home.roadMap.phases.1.quarter"),
-      title: t("home.roadMap.phases.1.title"),
+      quarter: "🚀 Limited Time Offer",
+      title: "Lock in $199/month before prices increase in Q3 2025",
       items: [
-        t("home.roadMap.items.aiComputeGridTestnet"),
-        t("home.roadMap.items.rwaTokenizationBeta"),
-        t("home.roadMap.items.depinNodeDeployment"),
-        t("home.roadMap.items.aiDaoPrototype"),
-        t("home.roadMap.items.smartContractAudits"),
-        t("home.roadMap.items.testnetIncentiveProgram"),
+        "This is our introductory rate for early adopters. Most SQL consultants charge $200/hour — we're offering ongoing monthly help for less than that.",
+        "Limited slots available",
+        "Secure My Spot",
+        
       ],
     },
-    {
-      quarter: t("home.roadMap.phases.2.quarter"),
-      title: t("home.roadMap.phases.2.title"),
-      items: [
-        t("home.roadMap.items.mainnetDeployment"),
-        t("home.roadMap.items.rwaMarketplace"),
-        t("home.roadMap.items.aiManagedStakingPools"),
-        t("home.roadMap.items.energyTradingPlatform"),
-        t("home.roadMap.items.cexDexListings"),
-        t("home.roadMap.items.ecosystemIncentives"),
-      ],
-    },
-    {
-      quarter: t("home.roadMap.phases.3.quarter"),
-      title: t("home.roadMap.phases.3.title"),
-      items: [
-        t("home.roadMap.items.aiModelMarketplace"),
-        t("home.roadMap.items.crossChainCompatibility"),
-        t("home.roadMap.items.layer2Scaling"),
-        t("home.roadMap.items.enterpriseIntegrations"),
-        t("home.roadMap.items.rwaExpansion"),
-        t("home.roadMap.items.globalOutreach"),
-      ],
-    },
+   
   ];
 
   return (
@@ -71,21 +47,21 @@ export default function RoadMap() {
       />
       <SectionHeading text={t("home.roadMap.subTitle")} />
       <h1 className="my-[25px] text-[32px] md:text-[40px] leading-[44px] font-bold text-white text-center">
-        {t("home.roadMap.title")}
+        Choose the right support plan for your business.
       </h1>
       <p className="text-center text-[18px] leading-[27px] font-normal font-poppins text-white/80 max-w-[653px] mx-auto">
-        {t("home.roadMap.description")}
+      Empowering growing businesses with expert SQL support — minimizing risk, maximizing speed, and scaling smoothly, without the overhead of a full-time DBA team.
       </p>
 
       {/* Cards Section */}
-      <div className="max-w-[1236px] mx-auto grid lg:grid-cols-4 justify-items-center sm:grid-cols-2 md:gap-[28px] gap-[16px] mt-[75px] pb-[40px]">
+      <div className="max-w-[1236px] mx-auto grid lg:grid-cols-2 justify-items-center sm:grid-cols-2 md:gap-[28px] gap-[16px] mt-[75px] pb-[40px]">
         {phaseData.map((phase, index) => (
           <div
             key={index}
-            className="rounded-[20px] bg-[#12092503] xl:w-[300px] border border-[#FFFFFF80] overflow-hidden min-h-[126px] transition-shadow duration-300 hover:shadow-[0px_0px_25px_0px_#8B5CF6]"
+            className="rounded-[20px] bg-[#12092503]  border border-[#FFFFFF80] overflow-hidden min-h-[350px] h-full transition-shadow duration-300 hover:shadow-[0px_0px_25px_0px_#8B5CF6] flex flex-col"
           >
             <div
-              className="text-white rounded-[20px] px-[20px] pt-[11px] pb-[19px] min-h-[126px] flex flex-col w-full h-full flex-1"
+              className="text-white rounded-[20px] px-[20px] pt-[11px] pb-[19px] flex flex-col w-full flex-1"
               style={{
                 boxShadow: "0px 0px 50px 0px #8B5CF680 inset",
                 backdropFilter: "blur(10px)",
@@ -93,7 +69,7 @@ export default function RoadMap() {
             >
               <h3 className="text-[20px] mb-[12px]">{phase.quarter}</h3>
               <h2 className="text-[20px] font-bold mb-[18px]">{phase.title}</h2>
-              <ul className="space-y-2">
+              <ul className="space-y-2 mb-4">
                 {phase.items.map((item, i) => (
                   <li
                     key={i}
@@ -104,6 +80,12 @@ export default function RoadMap() {
                   </li>
                 ))}
               </ul>
+              <a
+                href="/contact"
+                className="mt-auto inline-block w-full text-center bg-[#9B59FF] text-white px-6 py-2 rounded-full font-semibold shadow-md hover:bg-[#7d3c98] transition cursor-pointer"
+              >
+                {index === 0 ? "Get Started" : "Secure My Spot"}
+              </a>
             </div>
           </div>
         ))}

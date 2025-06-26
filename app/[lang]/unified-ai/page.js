@@ -1,4 +1,5 @@
 "use client";
+export const dynamic = "force-static";
 import React from "react";
 import { I18nextProvider } from "react-i18next";
 import i18n from "../../../i18n";
@@ -41,3 +42,18 @@ const AIUtility = () => {
 };
 
 export default AIUtility;
+
+export function generateStaticParams() {
+  return [
+    { lang: "en" },
+    { lang: "de" },
+    { lang: "fr" },
+    { lang: "es" },
+    { lang: "ru" },
+    { lang: "bn" },
+    { lang: "hi" },
+    { lang: "it" },
+    { lang: "ja" },
+    { lang: "pt-BR" }
+  ];
+}

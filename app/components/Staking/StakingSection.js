@@ -7,7 +7,6 @@ import { ethers } from "ethers";
 import Web3 from "web3";
 import tokenAbi from "../contractABI/tokenAbi";
 import stakingAbi from "../contractABI/stakingAbi";
-import { getClient } from "../../config/blockchain";
 import toast from "react-hot-toast";
 import { parseEther } from "viem";
 import $ from "jquery";
@@ -753,5 +752,11 @@ async function handleStakeToken(){
     </div>
   );
 };
+
+// Add a placeholder getClient function to avoid reference errors
+function getClient() {
+  // This is a placeholder. Implement as needed for your static site.
+  return null;
+}
 
 export default StakingSection;

@@ -9,30 +9,44 @@ const RWAContent = () => {
   const featuresData = [
     {
       id: 1,
-      title: t("rwa.rwaContent.features.title1"),
-      description: t("rwa.rwaContent.features.description1"),
+      title: "Database Health Checks",
+      description: "Comprehensive review of your SQL Server configuration, performance, and security with actionable insights.",
       imageSrc: "/assets/rwa/1.webp",
       reversed: false,
     },
     {
       id: 2,
-      title: t("rwa.rwaContent.features.title2"),
-      description: t("rwa.rwaContent.features.description2"),
+      title: "Performance Tuning",
+      description: "Identify slow queries, optimize indexes, and improve overall database responsiveness and uptime.",
       imageSrc: "/assets/rwa/2.webp",
       reversed: true,
     },
     {
       id: 3,
-      title: t("rwa.rwaContent.features.title3"),
-      description: t("rwa.rwaContent.features.description3"),
+      title: "Monitoring & Alerts",
+      description: "Set up proactive monitoring for availability, performance, and resource usage to prevent downtime.",
       imageSrc: "/assets/rwa/3.webp",
       reversed: false,
     },
     {
       id: 4,
-      title: t("rwa.rwaContent.features.title4"),
-      description: t("rwa.rwaContent.features.description4"),
+      title: "Backup & Recovery Strategy",
+      description: "Design and validate robust backup and recovery plans to safeguard your critical data.",
       imageSrc: "/assets/rwa/4.webp",
+      reversed: true,
+    },
+    {
+      id: 5,
+      title: "Security Review",
+      description: "Audit and harden user permissions, roles, and data access to align with best practices.",
+      imageSrc: "/assets/rwa/1.webp",
+      reversed: false,
+    },
+    {
+      id: 6,
+      title: "Migration & Upgrade",
+      description: "Plan and execute migrations from legacy SQL Server versions to modern, supported environments.",
+      imageSrc: "/assets/rwa/2.webp",
       reversed: true,
     },
   ];
@@ -49,19 +63,16 @@ const RWAContent = () => {
         />
         <div className="lg:max-w-[488px] lg:text-left text-center">
           <h2 className="text-white text-[32px] leading-[48px] font-bold mb-5">
-            {t("rwa.rwaContent.title")}
+          Expert SQL Server Support for Every Business.
           </h2>
           <p className="text-white/80 text-[18px] leading-[27px] font-normal font-poppins">
-            {t("rwa.rwaContent.description")}
+          NexaSQL delivers tailored SQL Server solutions that ensure your databases remain healthy, high-performing, and secure. From performance tuning and automated backups to disaster recovery and real-time monitoring, our team handles every detail—so your business runs without a hitch. With proactive optimization and scalable support plans, NexaSQL is your partner in reliable data infrastructure.
           </p>
         </div>
       </div>
 
       <h1 className="pt-[80px] lg:pt-0 max-w-[650px] mx-auto w-full text-center text-white text-[32px] md:text-[40px] leading-[48px] md:leading-[60px] font-bold">
-        <span className="text-[#9442ED]">
-          {t("rwa.rwaContent.heading.start")}
-        </span>{" "}
-        {t("rwa.rwaContent.heading.end")}
+        Our Services
       </h1>
 
       <div className="pt-8 md:mt-[100px] max-w-[1236px] w-full mx-auto pb-[300px] h-full">
@@ -97,12 +108,6 @@ const RWAContent = () => {
                     <p className="text-white/80 font-normal font-poppins text-[18px] leading-[27px]">
                       {feature.description}
                     </p>
-                    <div className="mt-5">
-                      <LocalizedButtonLink
-                        href="/staking"
-                        translationKey="rwa.rwaContent.buttonText"
-                      />
-                    </div>
                   </div>
                 </div>
                 <Image
@@ -143,12 +148,6 @@ const RWAContent = () => {
                     <p className="text-white/80 font-normal font-poppins text-[18px] leading-[27px]">
                       {feature.description}
                     </p>
-                    <div className="mt-5">
-                      <LocalizedButtonLink
-                        href="/staking"
-                        translationKey="rwa.rwaContent.buttonText"
-                      />
-                    </div>
                   </div>
                 </div>
               </>
